@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_08_205536) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_08_212125) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_08_205536) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_logs_on_created_by_id"
+  end
+
+  create_table "pet_shelters", force: :cascade do |t|
+    t.bigint "pet_id", null: false
+    t.bigint "shelter_id", null: false
+    t.datetime "received_at"
+    t.datetime "left_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pet_id"], name: "index_pet_shelters_on_pet_id"
+    t.index ["shelter_id"], name: "index_pet_shelters_on_shelter_id"
   end
 
   create_table "pets", force: :cascade do |t|
@@ -76,6 +87,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_08_205536) do
   end
 
   add_foreign_key "logs", "users", column: "created_by_id"
+  add_foreign_key "pet_shelters", "pets"
+  add_foreign_key "pet_shelters", "shelters"
   add_foreign_key "user_shelters", "shelters"
   add_foreign_key "user_shelters", "users"
 end
