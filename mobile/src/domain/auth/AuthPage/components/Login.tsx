@@ -1,4 +1,4 @@
-import { IonButton, IonInput } from "@ionic/react";
+import { IonButton, IonInput, IonItem, IonList } from "@ionic/react";
 import { useState, type FC } from "react";
 
 const Login: FC = () => {
@@ -16,13 +16,13 @@ const Login: FC = () => {
         placeholder="Email"
         value={email}
         onIonChange={(e: CustomEvent) => setEmail(e.detail.value!)}
-      ></IonInput>
+      />
       <IonInput
         type="password"
         placeholder="Password"
         value={password}
         onIonChange={(e: CustomEvent) => setPassword(e.detail.value!)}
-      ></IonInput>
+      />
       <IonButton expand="full" onClick={handleLogin}>
         Login
       </IonButton>
