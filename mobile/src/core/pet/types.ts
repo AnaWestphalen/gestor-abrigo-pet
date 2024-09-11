@@ -29,10 +29,14 @@ export type PetShelterHistory = {
   logs?: PetLog[];
 };
 
+export type AddPetLogParams = {
+  content: string;
+};
+
 export type PetServices = {
   getPetDetails: (id: string) => Promise<Pet>;
   getPetHistory: (id: string) => Promise<PetShelterHistory[]>;
   editPet: (id: string, pet: Partial<Pet>) => Promise<void>;
-  addPetLog: (id: string, content: string) => Promise<void>;
+  addPetLog: (id: string, params: AddPetLogParams) => Promise<void>;
   getPetLogs: (id: string) => Promise<PetLog[]>;
 };
