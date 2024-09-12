@@ -4,5 +4,19 @@
 
 .cadastro-abrigo {
     text-align: center;
-    padding: 2px 0; /* Reduce the vertical padding */
+    margin:20px;
+    font-size: 25px;
+    font-weight: bold;
 }
+
+.header-with-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Ensures the icon is on the right */
+  }
+
+  .icon-right {
+    font-size: 30px; /* Adjust the icon size to match the h1 text */
+    color: white; /* Customize the icon color if necessary */
+  }  
+

@@ -19,6 +19,7 @@ import { Geolocation } from '@capacitor/geolocation';
 import { personCircleOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom'; // for navigation
 import './RegisterShelter.css';  // Import the CSS file
+import { homeOutline } from 'ionicons/icons'; // Import the desired icon
 
 const RegisterShelter: React.FC = () => {
   // State to hold the form values
@@ -94,8 +95,14 @@ const RegisterShelter: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       
-      <h1 className="cadastro-abrigo">Cadastrar Abrigo</h1>
+
       <IonContent>
+
+      <div className="header-with-icon">
+        <h1 className="cadastro-abrigo">Cadastrar Abrigo</h1>
+        <IonIcon icon={homeOutline} className="icon-right" />
+      </div>
+
         <form onSubmit={handleSubmit}>
           <IonList>
             <IonItem>
