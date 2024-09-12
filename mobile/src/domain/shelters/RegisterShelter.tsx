@@ -9,10 +9,16 @@ import {
   IonLabel,
   IonInput,
   IonButton,
+  IonButtons,
   IonList,
   IonToast,
+  IonIcon,
+  IonBackButton,
 } from '@ionic/react';
 import { Geolocation } from '@capacitor/geolocation';
+import { personCircleOutline } from 'ionicons/icons';
+import { useHistory } from 'react-router-dom'; // for navigation
+import './RegisterShelter.css';  // Import the CSS file
 
 const RegisterShelter: React.FC = () => {
   // State to hold the form values
@@ -21,6 +27,7 @@ const RegisterShelter: React.FC = () => {
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [showToast, setShowToast] = useState<boolean>(false);
 
+  const history = useHistory(); // for navigation
 
   // Function to get the current geolocation
   const getCurrentLocation = async () => {
@@ -62,13 +69,32 @@ const RegisterShelter: React.FC = () => {
     }
   };
 
+  // Navigation handlers for icons
+  const goToHome = () => {
+    history.push('/home');
+  };
+
+  const goToAccount = () => {
+    history.push('/account');
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Cadastrar Abrigo</IonTitle>
+            <IonButtons slot="start">
+                <IonBackButton defaultHref="/" />
+            </IonButtons>
+          <IonTitle className="centered-title">Meu Abrigo</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={goToAccount}>
+              <IonIcon icon={personCircleOutline} />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
+      
+      <h1 className="cadastro-abrigo">Cadastrar Abrigo</h1>
       <IonContent>
         <form onSubmit={handleSubmit}>
           <IonList>
@@ -96,7 +122,7 @@ const RegisterShelter: React.FC = () => {
               <IonLabel position="stacked">Localização</IonLabel>
               <IonInput
                 value={location ? `${location.lat}, ${location.lng}` : ''}
-                placeholder="Digite as coordenadas ou clique no botão para usar sua localização atual"
+                placeholder="Clique no botão para usar sua localização atual"
                 disabled
               />
 

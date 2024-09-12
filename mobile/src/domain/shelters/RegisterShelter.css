@@ -1,0 +1,8 @@
+.centered-title {
+    text-align: center;
+  }
+
+.cadastro-abrigo {
+    text-align: center;
+    padding: 2px 0; /* Reduce the vertical padding */
+}
