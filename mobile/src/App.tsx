@@ -42,6 +42,8 @@ import "@ionic/react/css/palettes/dark.system.css";
 /* Theme variables */
 import "./theme/variables.css";
 import AuthPage from "./domain/auth/AuthPage/AuthPage";
+import RegisterShelter from './domain/shelters/RegisterShelter';
+
 
 setupIonicReact();
 
@@ -61,6 +63,9 @@ const App: React.FC = () => (
           </Route> */}
           <Route exact path="/">
             <Redirect to="/auth" />
+          </Route>
+          <Route exact path="/registershelter">
+            <RegisterShelter />
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
