@@ -12,11 +12,30 @@
 .header-with-icon {
     display: flex;
     align-items: center;
-    justify-content: center; /* Ensures the icon is on the right */
+    justify-content: center; 
   }
 
   .icon-right {
     font-size: 30px; /* Adjust the icon size to match the h1 text */
     color: white; /* Customize the icon color if necessary */
-  }  
+  }
 
+  .animal-selection {
+    padding-left: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-bottom: 20px;
+  }
+  
+  .animal-selection h2 {
+    width: 100%;
+    font-size: 20px;
+    margin-bottom: 1px;
+  }
+
+  .large-label {
+    font-size: 14px; /* Adjust the font size as needed */
+    font-weight: bold; /* Optional: Make the font bold */
+    white-space: nowrap; /* Prevent text from wrapping */
+  }
