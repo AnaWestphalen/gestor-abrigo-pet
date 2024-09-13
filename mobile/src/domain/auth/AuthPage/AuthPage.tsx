@@ -73,7 +73,7 @@ const AuthPage: React.FC = () => {
                 const password = formData.get("password") as string;
                 const phone = formData.get("phone") as string;
                 const response = await register({
-                  // name,
+                  name,
                   email,
                   password,
                   phone,
