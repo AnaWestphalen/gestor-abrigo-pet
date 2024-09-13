@@ -1,14 +1,26 @@
-import type { AuthServices } from "src/core/auth/types";
+import type { AuthServices, User } from "src/core/auth/types";
 import { BASE_URL } from "src/infra/server-api/config";
 
+const AUTH_ROUTES = {
+  login: "/auth/login",
+  register: "/auth/register",
+  logout: "/auth/logout",
+  whoami: "/auth/whoami",
+};
+
 const login: AuthServices["login"] = async ({ email, password }) => {
-  const response = await fetch(`${BASE_URL}/auth/login`, {
-    method: "POST",
-    body: JSON.stringify({ email, password }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  // const response = await fetch(`${BASE_URL}${AUTH_ROUTES.login}`, {
+  //   method: "POST",
+  //   body: JSON.stringify({ email, password }),
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // });
+
+  const response = {
+    ok: true,
+    json: async () => Promise.resolve(undefined),
+  };
 
   if (!response.ok) {
     throw new Error("E-mail ou senha inválidos");
@@ -21,19 +33,19 @@ const login: AuthServices["login"] = async ({ email, password }) => {
   return body;
 };
 
-const register: AuthServices["register"] = async ({
-  email,
-  password,
-  name,
-  phone,
-}) => {
-  const response = await fetch(`${BASE_URL}/auth/register`, {
-    method: "POST",
-    body: JSON.stringify({ email, password, name, phone }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+const register: AuthServices["register"] = async (params) => {
+  // const response = await fetch(`${BASE_URL}${AUTH_ROUTES.register}`, {
+  //   method: "POST",
+  //   body: JSON.stringify(params),
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // });
+
+  const response = {
+    ok: true,
+    json: async () => Promise.resolve(undefined),
+  };
 
   if (!response.ok) {
     throw new Error("Erro ao registrar usuário");
@@ -47,7 +59,7 @@ const register: AuthServices["register"] = async ({
 };
 
 const logout: AuthServices["logout"] = async () => {
-  const response = await fetch(`${BASE_URL}/auth/logout`, {
+  const response = await fetch(`${BASE_URL}${AUTH_ROUTES.logout}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -60,12 +72,25 @@ const logout: AuthServices["logout"] = async () => {
 };
 
 const whoami: AuthServices["whoami"] = async () => {
-  const response = await fetch(`${BASE_URL}/auth/whoami`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  // const response = await fetch(`${BASE_URL}${AUTH_ROUTES.whoami}`, {
+  //   method: "GET",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // });
+
+  const response = {
+    ok: true,
+    json: async () =>
+      Promise.resolve({
+        id: 1,
+        name: "John Doe",
+        email: "john@doe.com",
+        phone: "123456789",
+        role: "user",
+        createdAt: "2021-09-01T00:00:00Z",
+      } satisfies User),
+  };
 
   if (!response.ok) {
     throw new Error("Erro ao buscar usuário");

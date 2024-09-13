@@ -2,7 +2,7 @@ export type User = {
   allowedIn?: string[];
   createdAt?: string;
   email: string;
-  id: string;
+  id: number;
   name?: string;
   phone?: string;
   role?: string;
