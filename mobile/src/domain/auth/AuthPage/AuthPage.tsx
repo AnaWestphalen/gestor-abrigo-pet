@@ -1,3 +1,5 @@
+import { useEffect, useState, type FC } from "react";
+import { type RouteComponentProps } from "react-router-dom";
 import {
   IonButton,
   IonContent,
@@ -9,14 +11,20 @@ import {
   IonToolbar,
 } from "@ionic/react";
 
-import "./AuthPage.css";
-import { useState } from "react";
+import { useAuthServices } from "src/domain/auth/contexts/AuthServices/useAuthServices";
 import { checkmark } from "ionicons/icons";
-import { useAuthServices } from "src/domain/auth/hooks/useAuthServices/useAuthServices";
 
-const AuthPage: React.FC = () => {
-  const { login, register } = useAuthServices();
+import "./AuthPage.css";
+
+const AuthPage: FC<RouteComponentProps> = ({ history }) => {
+  const { currentUser, login, register } = useAuthServices();
   const [mode, setMode] = useState<"login" | "register">("login");
+
+  useEffect(() => {
+    if (currentUser) {
+      history.push("/dashboard");
+    }
+  }, [currentUser]);
 
   return (
     <IonPage>
@@ -46,7 +54,7 @@ const AuthPage: React.FC = () => {
                 }
               }}
             >
-              <IonInput type="email" placeholder="Email" />
+              <IonInput placeholder="Email" />
               <IonInput type="password" placeholder="Password" />
               <IonButton type="submit" expand="full">
                 Login
@@ -80,6 +88,7 @@ const AuthPage: React.FC = () => {
                 });
                 if (response.success) {
                   console.log("Registro realizado com sucesso");
+                  setMode("login");
                 }
               }}
             >

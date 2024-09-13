@@ -1,8 +1,9 @@
-import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
   IonIcon,
   IonLabel,
+  IonRedirect,
+  IonRoute,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
@@ -42,24 +43,29 @@ import "@ionic/react/css/palettes/dark.system.css";
 /* Theme variables */
 import "./theme/variables.css";
 import AuthPage from "src/domain/auth/AuthPage/AuthPage";
-import { RepositoryProvider } from "src/domain/shared/RepositoryProvider/RepositoryProvider";
-import type { FC } from "react";
-import type { Repository } from "src/core/repository/types";
+
+import { PrivateRoute } from "src/domain/shared/Route/PrivateRoute";
+import { DashboardPage } from "src/domain/dashboard/DashboardPage/DashboardPage";
+import { AuthServicesProvider } from "src/domain/auth/contexts/AuthServices/AuthServicesProvider";
+import { Redirect, Route } from "react-router-dom";
 
 setupIonicReact();
 
-const App: FC<{ repository: Repository }> = ({ repository }) => (
-  <RepositoryProvider repository={repository}>
-    <IonApp>
+const App = () => (
+  <IonApp>
+    <AuthServicesProvider>
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-            <Route exact path="/auth">
-              <AuthPage />
-            </Route>
-            <Route exact path="/">
-              <Redirect to="/auth" />
-            </Route>
+            <Route exact path="/" render={() => <Redirect to="/dashboard" />} />
+            <Route
+              exact
+              path="/auth"
+              render={(props) => <AuthPage {...props} />}
+            />
+            <PrivateRoute exact path="/dashboard">
+              <DashboardPage />
+            </PrivateRoute>
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
             <IonTabButton tab="test" href="/auth">
@@ -69,8 +75,8 @@ const App: FC<{ repository: Repository }> = ({ repository }) => (
           </IonTabBar>
         </IonTabs>
       </IonReactRouter>
-    </IonApp>
-  </RepositoryProvider>
+    </AuthServicesProvider>
+  </IonApp>
 );
 
 export default App;

@@ -1,6 +1,8 @@
 import type { AuthServices, User } from "src/core/auth/types";
 import { BASE_URL } from "src/infra/server-api/config";
 
+let isMockLoggedIn = false;
+
 const AUTH_ROUTES = {
   login: "/auth/login",
   register: "/auth/register",
@@ -16,6 +18,8 @@ const login: AuthServices["login"] = async ({ email, password }) => {
   //     "Content-Type": "application/json",
   //   },
   // });
+
+  isMockLoggedIn = true;
 
   const response = {
     ok: true,
@@ -59,12 +63,19 @@ const register: AuthServices["register"] = async (params) => {
 };
 
 const logout: AuthServices["logout"] = async () => {
-  const response = await fetch(`${BASE_URL}${AUTH_ROUTES.logout}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  // const response = await fetch(`${BASE_URL}${AUTH_ROUTES.logout}`, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // });
+
+  const response = {
+    ok: true,
+    json: async () => Promise.resolve(undefined),
+  };
+
+  isMockLoggedIn = false;
 
   if (!response.ok) {
     throw new Error("Erro ao deslogar usuário");
@@ -82,14 +93,18 @@ const whoami: AuthServices["whoami"] = async () => {
   const response = {
     ok: true,
     json: async () =>
-      Promise.resolve({
-        id: 1,
-        name: "John Doe",
-        email: "john@doe.com",
-        phone: "123456789",
-        role: "user",
-        createdAt: "2021-09-01T00:00:00Z",
-      } satisfies User),
+      Promise.resolve(
+        isMockLoggedIn
+          ? ({
+              id: 1,
+              name: "John Doe",
+              email: "john@doe.com",
+              phone: "123456789",
+              role: "user",
+              createdAt: "2021-09-01T00:00:00Z",
+            } satisfies User)
+          : undefined
+      ),
   };
 
   if (!response.ok) {
