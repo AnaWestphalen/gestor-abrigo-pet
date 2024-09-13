@@ -41,50 +41,41 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import AuthPage from "./domain/auth/AuthPage/AuthPage";
+import AuthPage from "src/domain/auth/AuthPage/AuthPage";
+import { RepositoryProvider } from "src/domain/shared/RepositoryProvider/RepositoryProvider";
+import type { FC } from "react";
+import type { Repository } from "src/core/repository/types";
 import RegisterShelter from './domain/shelters/RegisterShelter';
 
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/auth">
-            <AuthPage />
-          </Route>
-          {/* <Route exact path="/tab2">
-            <Tab2 />
-          </Route>
-          <Route path="/tab3">
-            <Tab3 />
-          </Route> */}
-          <Route exact path="/">
-            <Redirect to="/auth" />
-          </Route>
-          <Route exact path="/registershelter">
+const App: FC<{ repository: Repository }> = ({ repository }) => (
+  <RepositoryProvider repository={repository}>
+    <IonApp>
+      <IonReactRouter>
+        <IonTabs>
+          <IonRouterOutlet>
+            <Route exact path="/auth">
+              <AuthPage />
+            </Route>
+            <Route exact path="/">
+              <Redirect to="/auth" />
+            </Route>
+            <Route exact path="/registershelter">
             <RegisterShelter />
           </Route>
         </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="test" href="/auth">
-            <IonIcon aria-hidden="true" icon={triangle} />
-            <IonLabel>Test</IonLabel>
-          </IonTabButton>
-          {/* <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon aria-hidden="true" icon={ellipse} />
-            <IonLabel>Tab 2</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon aria-hidden="true" icon={square} />
-            <IonLabel>Tab 3</IonLabel>
-          </IonTabButton> */}
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
+          <IonTabBar slot="bottom">
+            <IonTabButton tab="test" href="/auth">
+              <IonIcon aria-hidden="true" icon={triangle} />
+              <IonLabel>Test</IonLabel>
+            </IonTabButton>
+          </IonTabBar>
+        </IonTabs>
+      </IonReactRouter>
+    </IonApp>
+  </RepositoryProvider>
 );
 
 export default App;
