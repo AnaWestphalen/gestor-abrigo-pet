@@ -1,20 +1,23 @@
 import {
+  type FC,
+  type ReactNode,
   createContext,
   useEffect,
   useState,
-  type FC,
-  type ReactNode,
 } from "react";
+
 import type { LoginParams, RegisterParams, User } from "src/core/auth/types";
 import { useRepository } from "src/domain/shared/RepositoryProvider/useRepository";
 
 type AuthServicesContextType = {
   currentUser?: User;
-  login: (params: LoginParams) => Promise<{ success?: boolean; error?: any }>;
+  login: (
+    params: LoginParams
+  ) => Promise<{ success?: boolean; error?: unknown }>;
   register: (
     params: RegisterParams
-  ) => Promise<{ success?: boolean; error?: any }>;
-  logout: () => Promise<{ success?: boolean; error?: any }>;
+  ) => Promise<{ success?: boolean; error?: unknown }>;
+  logout: () => Promise<{ success?: boolean; error?: unknown }>;
 };
 
 export const AuthServicesContext = createContext<AuthServicesContextType>(

@@ -1,5 +1,3 @@
-import { useEffect, useState, type FC } from "react";
-import { type RouteComponentProps } from "react-router-dom";
 import {
   IonButton,
   IonContent,
@@ -10,9 +8,11 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+import { checkmark } from "ionicons/icons";
+import { type FC, useEffect, useState } from "react";
+import { type RouteComponentProps } from "react-router-dom";
 
 import { useAuthServices } from "src/domain/auth/contexts/AuthServices/useAuthServices";
-import { checkmark } from "ionicons/icons";
 
 import "./AuthPage.css";
 

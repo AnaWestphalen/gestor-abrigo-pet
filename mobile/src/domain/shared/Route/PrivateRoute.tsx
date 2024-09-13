@@ -1,5 +1,6 @@
 import type { FC, ReactElement } from "react";
 import { Redirect, Route, type RouteProps } from "react-router-dom";
+
 import { useAuthServices } from "src/domain/auth/contexts/AuthServices/useAuthServices";
 
 export const PrivateRoute: FC<

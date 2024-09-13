@@ -2,8 +2,6 @@ import {
   IonApp,
   IonIcon,
   IonLabel,
-  IonRedirect,
-  IonRoute,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
@@ -12,6 +10,12 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { triangle } from "ionicons/icons";
+import { Redirect, Route } from "react-router-dom";
+
+import AuthPage from "src/domain/auth/AuthPage/AuthPage";
+import { AuthServicesProvider } from "src/domain/auth/contexts/AuthServices/AuthServicesProvider";
+import { DashboardPage } from "src/domain/dashboard/DashboardPage/DashboardPage";
+import { PrivateRoute } from "src/domain/shared/Route/PrivateRoute";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -42,12 +46,6 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import AuthPage from "src/domain/auth/AuthPage/AuthPage";
-
-import { PrivateRoute } from "src/domain/shared/Route/PrivateRoute";
-import { DashboardPage } from "src/domain/dashboard/DashboardPage/DashboardPage";
-import { AuthServicesProvider } from "src/domain/auth/contexts/AuthServices/AuthServicesProvider";
-import { Redirect, Route } from "react-router-dom";
 
 setupIonicReact();
 

@@ -1,16 +1,16 @@
 import type { AuthServices, User } from "src/core/auth/types";
-import { BASE_URL } from "src/infra/server-api/config";
+// import { BASE_URL } from "src/infra/server-api/config";
 
 let isMockLoggedIn = false;
 
-const AUTH_ROUTES = {
-  login: "/auth/login",
-  register: "/auth/register",
-  logout: "/auth/logout",
-  whoami: "/auth/whoami",
-};
+// const AUTH_ROUTES = {
+//   login: "/auth/login",
+//   register: "/auth/register",
+//   logout: "/auth/logout",
+//   whoami: "/auth/whoami",
+// };
 
-const login: AuthServices["login"] = async ({ email, password }) => {
+const login: AuthServices["login"] = async () => {
   // const response = await fetch(`${BASE_URL}${AUTH_ROUTES.login}`, {
   //   method: "POST",
   //   body: JSON.stringify({ email, password }),
@@ -37,7 +37,7 @@ const login: AuthServices["login"] = async ({ email, password }) => {
   return body;
 };
 
-const register: AuthServices["register"] = async (params) => {
+const register: AuthServices["register"] = async () => {
   // const response = await fetch(`${BASE_URL}${AUTH_ROUTES.register}`, {
   //   method: "POST",
   //   body: JSON.stringify(params),
