@@ -1,0 +1,73 @@
+<%# Exibe os detalhes do abrigo %>
+<h1><%= @shelter.name %></h1>
+
+<div>
+  <strong>Endereço:</strong>
+  <p><%= @shelter.address %>, <%= @shelter.city %>, <%= @shelter.state %></p>
+</div>
+
+<div>
+  <strong>Descrição:</strong>
+  <p><%= @shelter.description %></p>
+</div>
+
+<div>
+  <strong>Contato:</strong>
+  <p><%= @shelter.contact %></p>
+</div>
+
+<%# Exibe a lista de espécies aceitas %>
+<div>
+  <strong>Espécies Aceitas:</strong>
+  <ul>
+    <% @shelter.accepts.each do |species| %>
+      <li><%= species %></li>
+    <% end %>
+  </ul>
+</div>
+
+<%# Exibe a imagem do abrigo, se disponível %>
+<% if @shelter.img.present? %>
+  <div>
+    <strong>Imagem:</strong>
+    <img src="<%= @shelter.img %>" alt="<%= @shelter.name %>" style="max-width: 100%; height: auto;" />
+  </div>
+<% end %>
+
+<%# Exibe o mapa somente se as coordenadas estiverem presentes %>
+<% if @shelter.latitude && @shelter.longitude %>
+  <h2>Localização no mapa:</h2>
+  <div id='map' style='width: 100%; height: 400px;'></div>
+
+  <!-- Inclui o CSS do Mapbox -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
+
+  <!-- Inclui o JavaScript do Mapbox -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+
+  <script>
+    // Configuração do mapa com Mapbox
+    mapboxgl.accessToken = '<%= ENV["MAPBOX_API_KEY"] %>'; // Usa variável de ambiente para o token da API
+    var map = new mapboxgl.Map({
+      container: 'map', // ID do contêiner do mapa
+      style: 'mapbox://styles/mapbox/streets-v11', // Estilo do mapa
+      center: [<%= @shelter.longitude %>, <%= @shelter.latitude %>], // Coordenadas do abrigo
+      zoom: 14 // Nível de zoom
+    });
+
+    // Adiciona um marcador ao mapa
+    new mapboxgl.Marker()
+      .setLngLat([<%= @shelter.longitude %>, <%= @shelter.latitude %>])
+      .addTo(map); // Adiciona o marcador ao mapa
+  </script>
+<% end %>
+
+<%# Botões de edição e exclusão, visíveis somente para o criador do abrigo %>
+<% if user_signed_in? && current_user.id == @shelter.created_by %>
+  <div class="actions">
+    <%= link_to 'Editar Abrigo', edit_shelter_path(@shelter), class: 'btn btn-primary' %>
+    <%= link_to 'Excluir Abrigo', @shelter, method: :delete, data: { confirm: 'Tem certeza que deseja excluir este abrigo?' }, class: 'btn btn-danger' %>
+  </div>
+<% end %>
+
+<%= link_to 'Voltar para lista', shelters_path, class: 'btn btn-secondary' %>
