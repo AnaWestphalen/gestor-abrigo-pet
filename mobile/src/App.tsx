@@ -46,6 +46,7 @@ import AuthPage from "src/domain/auth/AuthPage/AuthPage";
 import { AuthServicesProvider } from "src/domain/auth/contexts/AuthServices/AuthServicesProvider";
 import { DashboardPage } from "src/domain/dashboard/DashboardPage/DashboardPage";
 import { PrivateRoute } from "src/domain/shared/Route/PrivateRoute";
+import ShelterPage from "src/domain/shelter/components/ShelterPage/ShelterPage";
 import { ShelterServicesProvider } from "src/domain/shelter/contexts/ShelterServices/ShelterServicesProvider";
 
 setupIonicReact();
@@ -69,6 +70,9 @@ const App = () => (
               />
               <PrivateRoute exact path="/dashboard">
                 <DashboardPage />
+              </PrivateRoute>
+              <PrivateRoute path="/shelter/:id">
+                <ShelterPage />
               </PrivateRoute>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">

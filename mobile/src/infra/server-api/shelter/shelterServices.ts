@@ -2,12 +2,29 @@ import type { ShelterServices } from "src/core/shelter/types";
 import { BASE_URL } from "src/infra/server-api/config";
 
 const getShelterDetails: ShelterServices["getShelterDetails"] = async (id) => {
-  const response = await fetch(`${BASE_URL}/shelter/${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  // const response = await fetch(`${BASE_URL}/shelter/${id}`, {
+  //   method: "GET",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // });
+
+  /** mock */
+  const response = {
+    ok: true,
+    json: async () => ({
+      id,
+      name: `Abrigo ${id}`,
+      accepts: ["dog", "cat"],
+      address: "Rua 1, 123",
+      contact: "11999999999",
+      coordinates: {
+        latitude: -23.5505,
+        longitude: -46.6333,
+      },
+      img: "https://via.placeholder.com/150",
+    }),
+  };
 
   if (!response.ok) {
     throw new Error("Erro ao buscar detalhes do abrigo");
@@ -103,7 +120,7 @@ const getShelterLogs: ShelterServices["getShelterLogs"] = async (id) => {
 
 const registerPet: ShelterServices["registerPet"] = async (
   shelterId,
-  params,
+  params
 ) => {
   const response = await fetch(
     `${BASE_URL}/shelter/${shelterId}/pet/register`,
@@ -113,7 +130,7 @@ const registerPet: ShelterServices["registerPet"] = async (
       headers: {
         "Content-Type": "application/json",
       },
-    },
+    }
   );
 
   if (!response.ok) {

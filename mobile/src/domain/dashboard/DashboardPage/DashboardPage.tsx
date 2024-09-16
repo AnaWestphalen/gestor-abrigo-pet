@@ -8,7 +8,8 @@ export const DashboardPage: FC = () => {
   return (
     <IonPage>
       <IonContent>
-        <h1>Nada aqui ainda, mas você está logado.</h1>
+        <h1>Início</h1>
+        <IonButton routerLink="/shelter/1">Abrigo 1</IonButton>
         <IonButton onClick={logout}>Logout</IonButton>
       </IonContent>
     </IonPage>
