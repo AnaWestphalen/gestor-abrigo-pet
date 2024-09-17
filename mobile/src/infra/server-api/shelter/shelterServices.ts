@@ -14,8 +14,8 @@ const getShelterDetails: ShelterServices["getShelterDetails"] = async (id) => {
     ok: true,
     json: async () => ({
       id,
-      name: `Abrigo ${id}`,
-      accepts: ["dog", "cat"],
+      name: `Abrigo #${id}`,
+      accepts: ["cachorro", "gato"],
       address: "Rua 1, 123",
       contact: "11999999999",
       coordinates: {

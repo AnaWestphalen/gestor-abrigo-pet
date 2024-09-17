@@ -10,29 +10,19 @@ import type {
 } from "src/core/shelter/types";
 import { useRepository } from "src/domain/shared/RepositoryProvider/useRepository";
 
+type ApiResponse<T = boolean> = { success?: T; error?: unknown };
+
 type ShelterServicesContextType = {
-  getShelterDetails: (
-    id: string
-  ) => Promise<{ success?: Shelter; error?: unknown }>;
-  createShelter: (
-    params: CreateShelterParams
-  ) => Promise<{ success?: boolean; error?: unknown }>;
-  editShelter: (
-    id: string,
-    data: EditShelterParams
-  ) => Promise<{ success?: boolean; error?: unknown }>;
-  closeShelter: (id: string) => Promise<{ success?: boolean; error?: unknown }>;
-  addLog: (
-    shelterId: string,
-    params: AddLogParams
-  ) => Promise<{ success?: boolean; error?: unknown }>;
-  getShelterLogs: (
-    id: string
-  ) => Promise<{ success?: ShelterLog[]; error?: unknown }>;
+  getShelterDetails: (id: number) => Promise<ApiResponse<Shelter>>;
+  createShelter: (params: CreateShelterParams) => Promise<ApiResponse>;
+  editShelter: (id: number, data: EditShelterParams) => Promise<ApiResponse>;
+  closeShelter: (id: number) => Promise<ApiResponse>;
+  addLog: (shelterId: number, params: AddLogParams) => Promise<ApiResponse>;
+  getShelterLogs: (id: number) => Promise<ApiResponse<ShelterLog[]>>;
   registerPet: (
-    shelterId: string,
+    shelterId: number,
     params: RegisterPetParams
-  ) => Promise<{ success?: boolean; error?: unknown }>;
+  ) => Promise<ApiResponse>;
 };
 
 export const ShelterServicesContext = createContext<ShelterServicesContextType>(
@@ -44,7 +34,7 @@ export const ShelterServicesProvider: FC<{ children: ReactNode }> = ({
 }) => {
   const { repository } = useRepository();
 
-  const getShelterDetails = async (id: string) => {
+  const getShelterDetails = async (id: number) => {
     try {
       const shelter = await repository.shelter.getShelterDetails(id);
       return { success: shelter };
@@ -62,7 +52,7 @@ export const ShelterServicesProvider: FC<{ children: ReactNode }> = ({
     }
   };
 
-  const editShelter = async (id: string, data: EditShelterParams) => {
+  const editShelter = async (id: number, data: EditShelterParams) => {
     try {
       await repository.shelter.editShelter(id, data);
       return { success: true };
@@ -71,7 +61,7 @@ export const ShelterServicesProvider: FC<{ children: ReactNode }> = ({
     }
   };
 
-  const closeShelter = async (id: string) => {
+  const closeShelter = async (id: number) => {
     try {
       await repository.shelter.closeShelter(id);
       return { success: true };
@@ -80,7 +70,7 @@ export const ShelterServicesProvider: FC<{ children: ReactNode }> = ({
     }
   };
 
-  const addLog = async (shelterId: string, params: AddLogParams) => {
+  const addLog = async (shelterId: number, params: AddLogParams) => {
     try {
       await repository.shelter.addLog(shelterId, params);
       return { success: true };
@@ -89,7 +79,7 @@ export const ShelterServicesProvider: FC<{ children: ReactNode }> = ({
     }
   };
 
-  const getShelterLogs = async (id: string) => {
+  const getShelterLogs = async (id: number) => {
     try {
       const logs = await repository.shelter.getShelterLogs(id);
       return { success: logs };
@@ -98,7 +88,7 @@ export const ShelterServicesProvider: FC<{ children: ReactNode }> = ({
     }
   };
 
-  const registerPet = async (shelterId: string, params: RegisterPetParams) => {
+  const registerPet = async (shelterId: number, params: RegisterPetParams) => {
     try {
       await repository.shelter.registerPet(shelterId, params);
       return { success: true };

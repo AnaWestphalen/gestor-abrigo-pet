@@ -1,5 +1,6 @@
 import {
   IonBackButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -28,11 +29,16 @@ const ShelterPage: React.FC = () => {
 
   useEffect(() => {
     const fetchShelterDetails = async () => {
-      const { success, error } = await getShelterDetails(params.id);
-      if (success) {
-        setShelter(success);
+      const id = parseInt(params.id, 10);
+      if (isNaN(id)) {
+        console.error("Invalid shelter id:", params.id);
+        return;
+      }
+      const result = await getShelterDetails(id);
+      if (result.success) {
+        setShelter(result.success);
       } else {
-        console.error("Failed to fetch shelter details:", error);
+        console.error("Failed to fetch shelter details:", result.error);
       }
     };
 
@@ -46,11 +52,11 @@ const ShelterPage: React.FC = () => {
         <IonHeader>
           <IonToolbar>
             <IonBackButton />
-            <IonTitle>Loading...</IonTitle>
+            <IonTitle>Abrigo - Carregando...</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <p>Loading shelter details...</p>
+          <p>Aguardando detalhes do abrigo...</p>
         </IonContent>
       </IonPage>
     );
@@ -60,6 +66,9 @@ const ShelterPage: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/" />
+          </IonButtons>
           <IonTitle>Abrigo</IonTitle>
         </IonToolbar>
       </IonHeader>
