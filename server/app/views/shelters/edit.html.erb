@@ -1,0 +1,39 @@
+<h1>Editar Abrigo</h1>
+
+<%= simple_form_for @shelter do |f| %>
+  <div class="form-group">
+    <%= f.input :name, label: "Nome do Abrigo", placeholder: "Digite o nome do abrigo" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.input :address, label: "Endereço", placeholder: "Digite o endereço completo" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.input :city, label: "Cidade", placeholder: "Digite a cidade" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.input :state, label: "Estado", placeholder: "Digite o estado" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.input :description, label: "Descrição", placeholder: "Descreva o abrigo", as: :text %>
+  </div>
+
+  <div class="form-group">
+    <%= f.input :contact, label: "Contato", placeholder: "Digite o telefone de contato" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.input :accepts, label: "Espécies Aceitas", as: :check_boxes, collection: ["Cachorros", "Gatos", "Outros"] %>
+  </div>
+
+  <div class="form-group">
+    <%= f.input :img, label: "Imagem (URL)", placeholder: "URL da imagem do abrigo" %>
+  </div>
+
+  <%= f.submit 'Atualizar Abrigo', class: 'btn btn-primary' %>
+<% end %>
+
+<%= link_to 'Cancelar', shelter_path(@shelter), class: 'btn btn-secondary' %>

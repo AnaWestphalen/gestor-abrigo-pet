@@ -17,6 +17,8 @@ shelters = Shelter.create!([
     img: 'shelter1.jpg',
     name: 'Abrigo A',
     address: 'Rua 1',
+    city: 'São Paulo',
+    state: 'SP',
     latitude: -23.5505,
     longitude: -46.6333,
     description: 'Abrigo para cachorros',
@@ -24,16 +26,18 @@ shelters = Shelter.create!([
     accepts: %w(cachorro gato),
     created_by: users.first.id
   },
-  {
+ {
     img: 'shelter2.jpg',
     name: 'Abrigo B',
     address: 'Rua 2',
+    city: 'São Paulo',
+    state: 'SP',
     latitude: -23.5506,
     longitude: -46.6334,
     description: 'Abrigo para gatos',
     contact: '11987654322',
     accepts: ['gato'],
-    created_by: users.second.id
+    created_by: users.first.id
   }
 ])
 
@@ -75,6 +79,7 @@ logs = Log.create!([
   { content: 'Registro de evento para o abrigo A', created_by: users.first },
   { content: 'Registro de evento para o abrigo B', created_by: users.second }
 ])
+
 
 # Seed para o model ShelterLog (associação entre Shelter e Log)
 ShelterLog.create!([
