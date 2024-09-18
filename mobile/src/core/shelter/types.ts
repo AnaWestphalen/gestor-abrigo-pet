@@ -46,4 +46,5 @@ export type ShelterServices = {
   addLog: (shelterId: number, params: AddLogParams) => Promise<void>;
   getShelterLogs: (id: number) => Promise<ShelterLog[]>;
   registerPet: (shelterId: number, params: RegisterPetParams) => Promise<void>;
+  getShelterPets: (id: number) => Promise<Pet[]>;
 };

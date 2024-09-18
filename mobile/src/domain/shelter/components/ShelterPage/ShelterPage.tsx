@@ -127,6 +127,15 @@ const ShelterPage: React.FC = () => {
                 </IonItem>
               )}
             </IonList>
+            <IonItem
+              routerLink={`/shelter/${shelter.id}/pets`}
+              routerDirection="forward"
+            >
+              <IonLabel>
+                <h2>Pets no Abrigo</h2>
+                <p>Ver todos os pets no abrigo</p>
+              </IonLabel>
+            </IonItem>
           </IonCardContent>
         </IonCard>
       </IonContent>

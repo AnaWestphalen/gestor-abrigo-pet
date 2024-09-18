@@ -1,5 +1,6 @@
 import { type FC, type ReactNode, createContext } from "react";
 
+import type { Pet } from "src/core/pet/types";
 import type {
   AddLogParams,
   CreateShelterParams,
@@ -9,20 +10,23 @@ import type {
   ShelterLog,
 } from "src/core/shelter/types";
 import { useRepository } from "src/domain/shared/RepositoryProvider/useRepository";
-
-type ApiResponse<T = boolean> = { success?: T; error?: unknown };
+import type { ServiceResponse } from "src/domain/shared/types";
 
 type ShelterServicesContextType = {
-  getShelterDetails: (id: number) => Promise<ApiResponse<Shelter>>;
-  createShelter: (params: CreateShelterParams) => Promise<ApiResponse>;
-  editShelter: (id: number, data: EditShelterParams) => Promise<ApiResponse>;
-  closeShelter: (id: number) => Promise<ApiResponse>;
-  addLog: (shelterId: number, params: AddLogParams) => Promise<ApiResponse>;
-  getShelterLogs: (id: number) => Promise<ApiResponse<ShelterLog[]>>;
+  getShelterDetails: (id: number) => Promise<ServiceResponse<Shelter>>;
+  createShelter: (params: CreateShelterParams) => Promise<ServiceResponse>;
+  editShelter: (
+    id: number,
+    data: EditShelterParams
+  ) => Promise<ServiceResponse>;
+  closeShelter: (id: number) => Promise<ServiceResponse>;
+  addLog: (shelterId: number, params: AddLogParams) => Promise<ServiceResponse>;
+  getShelterLogs: (id: number) => Promise<ServiceResponse<ShelterLog[]>>;
   registerPet: (
     shelterId: number,
     params: RegisterPetParams
-  ) => Promise<ApiResponse>;
+  ) => Promise<ServiceResponse>;
+  getShelterPets: (id: number) => Promise<ServiceResponse<Pet[]>>;
 };
 
 export const ShelterServicesContext = createContext<ShelterServicesContextType>(
@@ -97,6 +101,15 @@ export const ShelterServicesProvider: FC<{ children: ReactNode }> = ({
     }
   };
 
+  const getShelterPets = async (id: number) => {
+    try {
+      const pets = await repository.shelter.getShelterPets(id);
+      return { success: pets };
+    } catch (error) {
+      return { error };
+    }
+  };
+
   return (
     <ShelterServicesContext.Provider
       value={{
@@ -107,6 +120,7 @@ export const ShelterServicesProvider: FC<{ children: ReactNode }> = ({
         addLog,
         getShelterLogs,
         registerPet,
+        getShelterPets,
       }}
     >
       {children}
