@@ -54,7 +54,7 @@ const ShelterPetsPage: React.FC = () => {
           <IonRow>
             {pets.map((pet) => (
               <IonCol size="6" key={pet.id}>
-                <IonCard>
+                <IonCard routerLink={`/pet/${pet.id}`}>
                   <IonImg src={pet.img || "https://via.placeholder.com/100"} />
                   <IonCardHeader>
                     <IonCardTitle>{pet.name}</IonCardTitle>

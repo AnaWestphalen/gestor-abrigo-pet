@@ -31,6 +31,7 @@ export type PetShelterHistory = {
 
 export type AddPetLogParams = {
   content: string;
+  currentUser: string;
 };
 
 export type PetServices = {

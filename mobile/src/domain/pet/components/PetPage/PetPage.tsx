@@ -1,27 +1,40 @@
 import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
+  IonCardSubtitle,
   IonCardTitle,
   IonContent,
+  IonGrid,
   IonHeader,
+  IonIcon,
+  IonImg,
   IonItem,
   IonLabel,
   IonList,
   IonPage,
+  IonRow,
+  IonTextarea,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+import { addOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import type { Pet } from "src/core/pet/types";
+import type { Pet, PetLog } from "src/core/pet/types";
+import { useAuthServices } from "src/domain/auth/contexts/AuthServices/useAuthServices";
 import { usePetServices } from "src/domain/pet/contexts/PetServices/usePetServices";
 
 const PetPage: React.FC = () => {
   const params = useParams<{ id: string }>();
-  const { getPetDetails } = usePetServices();
+  const { currentUser } = useAuthServices();
+  const { getPetDetails, getPetLogs, addPetLog } = usePetServices();
   const [pet, setPet] = useState<Pet | null>(null);
+  const [petLogs, setPetLogs] = useState<PetLog[] | null>(null);
 
   useEffect(() => {
     const fetchPetDetails = async () => {
@@ -36,6 +49,20 @@ const PetPage: React.FC = () => {
     console.log("Fetching shelter details for id: ", params);
     fetchPetDetails();
   }, [params.id, getPetDetails]);
+
+  useEffect(() => {
+    const fetchPetLogs = async () => {
+      const { success, error } = await getPetLogs(Number(params.id));
+      if (success) {
+        setPetLogs(success);
+      } else {
+        console.error("Falha ao buscar logs do pet:", error);
+      }
+    };
+
+    console.log("Buscando logs para o pet de id: ", params);
+    fetchPetLogs();
+  }, [params.id, getPetLogs]);
 
   if (!pet) {
     return (
@@ -52,15 +79,47 @@ const PetPage: React.FC = () => {
     );
   }
 
+  const handleAddPetLog = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const content = formData.get("content") as string;
+    console.log("Criando atividade no feed do pet com o conteúdo: ", content);
+    try {
+      const { success } = await addPetLog(Number(params.id), {
+        content,
+        currentUser: currentUser!.name || currentUser!.email,
+      });
+      console.log("Atividade adicionada com sucesso? ", success);
+      if (success) {
+        const { success, error } = await getPetLogs(Number(params.id));
+        console.log("Buscando logs para o pet de id: ", params);
+        if (success) {
+          console.log("Logs do pet atualizados: ", success);
+          setPetLogs(success);
+        } else {
+          console.error("Falha ao buscar logs do pet:", error);
+        }
+      }
+      form.reset();
+    } catch (error) {
+      console.error("Falha ao adicionar log para o pet:", error);
+    }
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/" />
+          </IonButtons>
           <IonTitle>{pet.name}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <IonCard>
+          <IonImg src={pet.img || "https://via.placeholder.com/150"} />
           <IonCardHeader>
             <IonCardTitle>{pet.name}</IonCardTitle>
           </IonCardHeader>
@@ -133,6 +192,59 @@ const PetPage: React.FC = () => {
             </IonList>
           </IonCardContent>
         </IonCard>
+
+        <div>
+          <h2 className="ion-padding">Atividades</h2>
+          <div>
+            <IonCard>
+              <form onSubmit={handleAddPetLog}>
+                <IonCardContent>
+                  <IonTextarea
+                    name="content"
+                    label="Atividade"
+                    labelPlacement="floating"
+                    fill="outline"
+                    placeholder="Descreva qual a novidade..."
+                    required
+                  />
+                </IonCardContent>
+
+                <IonGrid>
+                  <IonRow className="ion-padding-bottom ion-justify-content-center">
+                    <IonButton type="submit" fill="clear" inputMode="text">
+                      <IonIcon icon={addOutline} slot="start" /> Adicionar
+                    </IonButton>
+                  </IonRow>
+                </IonGrid>
+              </form>
+            </IonCard>
+          </div>
+          {!!petLogs?.length &&
+            petLogs.map((log) => {
+              const createdDate = new Date(log.createdAt);
+              const dateString = `${createdDate.toLocaleDateString("pt-br")} - ${createdDate.toLocaleTimeString("pt-br")}`;
+              return (
+                <IonCard key={`${log.id}-${log.createdAt}`}>
+                  <IonCardHeader>
+                    <IonCardSubtitle>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <span>{log.createdBy}</span>
+                        <span>{dateString}</span>
+                      </div>
+                    </IonCardSubtitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <p>{log.content}</p>
+                  </IonCardContent>
+                </IonCard>
+              );
+            })}
+        </div>
       </IonContent>
     </IonPage>
   );

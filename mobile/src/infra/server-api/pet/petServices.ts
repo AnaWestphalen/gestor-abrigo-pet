@@ -1,6 +1,16 @@
 import type { PetServices } from "src/core/pet/types";
 // import { BASE_URL } from "src/infra/server-api/config";
 
+const mockLogs = [
+  {
+    id: 1,
+    petId: 1,
+    content: "Exemplo de log",
+    createdAt: new Date().toISOString(),
+    createdBy: "Usuário exemplo",
+  },
+];
+
 const getPetDetails: PetServices["getPetDetails"] = async (id) => {
   // const response = await fetch(`${BASE_URL}/pet/${id}`, {
   //   method: "GET",
@@ -99,9 +109,16 @@ const addPetLog: PetServices["addPetLog"] = async (id, params) => {
 
   // Mock response for development
   console.log("Add pet log mock response: ", { id, ...params });
+  mockLogs.unshift({
+    id: mockLogs.length + 1,
+    petId: id,
+    content: params.content,
+    createdAt: new Date().toISOString(),
+    createdBy: params.currentUser,
+  });
 };
 
-const getPetLogs: PetServices["getPetLogs"] = async (id) => {
+const getPetLogs: PetServices["getPetLogs"] = async () => {
   // const response = await fetch(`${BASE_URL}/pet/${id}/logs`, {
   //   method: "GET",
   //   headers: {
@@ -120,15 +137,7 @@ const getPetLogs: PetServices["getPetLogs"] = async (id) => {
   // return body;
 
   // Mock response for development
-  return [
-    {
-      id: 1,
-      petId: id,
-      content: "Pet log content",
-      createdAt: new Date().toISOString(),
-      createdBy: "Admin",
-    },
-  ];
+  return mockLogs;
 };
 
 const petServices: PetServices = {

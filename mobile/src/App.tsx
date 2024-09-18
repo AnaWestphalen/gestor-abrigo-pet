@@ -45,6 +45,8 @@ import { Redirect, Route } from "react-router-dom";
 import AuthPage from "src/domain/auth/AuthPage/AuthPage";
 import { AuthServicesProvider } from "src/domain/auth/contexts/AuthServices/AuthServicesProvider";
 import { DashboardPage } from "src/domain/dashboard/DashboardPage/DashboardPage";
+import PetPage from "src/domain/pet/components/PetPage/PetPage";
+import { PetServicesProvider } from "src/domain/pet/contexts/PetServices/PetServicesProvider";
 import { PrivateRoute } from "src/domain/shared/Route/PrivateRoute";
 import ShelterPage from "src/domain/shelter/components/ShelterPage/ShelterPage";
 import ShelterPetsPage from "src/domain/shelter/components/ShelterPetsPage/ShelterPetsPage";
@@ -56,37 +58,42 @@ const App = () => (
   <IonApp>
     <AuthServicesProvider>
       <ShelterServicesProvider>
-        <IonReactRouter>
-          <IonTabs>
-            <IonRouterOutlet>
-              <Route
-                exact
-                path="/"
-                render={() => <Redirect to="/dashboard" />}
-              />
-              <Route
-                exact
-                path="/auth"
-                render={(props) => <AuthPage {...props} />}
-              />
-              <PrivateRoute exact path="/dashboard">
-                <DashboardPage />
-              </PrivateRoute>
-              <PrivateRoute exact path="/shelter/:id/pets">
-                <ShelterPetsPage />
-              </PrivateRoute>
-              <PrivateRoute exact path="/shelter/:id">
-                <ShelterPage />
-              </PrivateRoute>
-            </IonRouterOutlet>
-            <IonTabBar slot="bottom">
-              <IonTabButton tab="test" href="/auth">
-                <IonIcon aria-hidden="true" icon={triangle} />
-                <IonLabel>Test</IonLabel>
-              </IonTabButton>
-            </IonTabBar>
-          </IonTabs>
-        </IonReactRouter>
+        <PetServicesProvider>
+          <IonReactRouter>
+            <IonTabs>
+              <IonRouterOutlet>
+                <Route
+                  exact
+                  path="/"
+                  render={() => <Redirect to="/dashboard" />}
+                />
+                <Route
+                  exact
+                  path="/auth"
+                  render={(props) => <AuthPage {...props} />}
+                />
+                <PrivateRoute exact path="/dashboard">
+                  <DashboardPage />
+                </PrivateRoute>
+                <PrivateRoute exact path="/shelter/:id/pets">
+                  <ShelterPetsPage />
+                </PrivateRoute>
+                <PrivateRoute exact path="/shelter/:id">
+                  <ShelterPage />
+                </PrivateRoute>
+                <PrivateRoute exact path="/pet/:id">
+                  <PetPage />
+                </PrivateRoute>
+              </IonRouterOutlet>
+              <IonTabBar slot="bottom">
+                <IonTabButton tab="test" href="/auth">
+                  <IonIcon aria-hidden="true" icon={triangle} />
+                  <IonLabel>Test</IonLabel>
+                </IonTabButton>
+              </IonTabBar>
+            </IonTabs>
+          </IonReactRouter>
+        </PetServicesProvider>
       </ShelterServicesProvider>
     </AuthServicesProvider>
   </IonApp>
