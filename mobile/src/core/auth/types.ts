@@ -24,5 +24,5 @@ export type AuthServices = {
   register: (params: RegisterParams) => Promise<void>;
   login: (params: LoginParams) => Promise<void>;
   logout: () => Promise<void>;
-  whoami: () => Promise<User>;
+  whoami: () => Promise<User | undefined>;
 };

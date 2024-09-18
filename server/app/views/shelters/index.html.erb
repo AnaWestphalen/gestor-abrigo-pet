@@ -1,0 +1,48 @@
+<h1>Lista de Abrigos</h1>
+
+<div class="search-forms">
+  <div>
+    <h2>Buscar por Nome</h2>
+    <%= form_with url: search_shelters_path, method: :get, local: true do %>
+      <div class="form-group">
+        <label for="name">Nome do Abrigo:</label>
+        <%= text_field_tag :name, params[:name], placeholder: "Digite o nome do abrigo", class: "form-control" %>
+      </div>
+      <%= submit_tag "Buscar", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <div>
+    <h2>Buscar por Cidade</h2>
+    <%= form_with url: search_shelters_path, method: :get, local: true do %>
+      <div class="form-group">
+        <label for="city">Cidade:</label>
+        <%= text_field_tag :city, params[:city], placeholder: "Digite o nome da cidade", class: "form-control" %>
+      </div>
+      <%= submit_tag "Buscar", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>
+
+<% if @shelters.any? %>
+  <ul>
+    <% @shelters.each do |shelter| %>
+      <li>
+        <%= link_to shelter.name, shelter_path(shelter) %> - <%= shelter.city %>, <%= shelter.state %>
+        <p><%= truncate(shelter.description, length: 100) %></p>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>Nenhum abrigo encontrado.</p>
+<% end %>
+
+<% if user_signed_in? %>
+  <% if current_user.role == 'gestor' %>
+    <!-- Usuário logado e com role 'gestor': opção para registrar novo abrigo -->
+    <%= link_to 'Registrar novo abrigo', new_shelter_path, class: 'btn btn-success' %>
+  <% end %>
+  <%= link_to 'Sair', destroy_user_session_path, method: :delete, class: 'btn btn-danger', data: { confirm: 'Tem certeza que deseja sair?' } %>
+<% end %>
+
+<%= link_to 'Voltar para Home', root_path, class: 'btn btn-secondary' %>

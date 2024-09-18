@@ -103,7 +103,7 @@ const getShelterLogs: ShelterServices["getShelterLogs"] = async (id) => {
 
 const registerPet: ShelterServices["registerPet"] = async (
   shelterId,
-  params
+  params,
 ) => {
   const response = await fetch(
     `${BASE_URL}/shelter/${shelterId}/pet/register`,
@@ -113,7 +113,7 @@ const registerPet: ShelterServices["registerPet"] = async (
       headers: {
         "Content-Type": "application/json",
       },
-    }
+    },
   );
 
   if (!response.ok) {
