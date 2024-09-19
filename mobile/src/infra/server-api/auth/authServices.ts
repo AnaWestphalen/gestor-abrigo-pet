@@ -102,6 +102,7 @@ const whoami: AuthServices["whoami"] = async () => {
               phone: "123456789",
               role: "user",
               createdAt: "2021-09-01T00:00:00Z",
+              allowedIn: [1, 2],
             } satisfies User)
           : undefined
       ),

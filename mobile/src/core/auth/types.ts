@@ -1,5 +1,5 @@
 export type User = {
-  allowedIn?: string[];
+  allowedIn?: number[];
   createdAt?: string;
   email: string;
   id: number;
