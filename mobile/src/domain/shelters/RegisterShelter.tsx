@@ -1,36 +1,33 @@
-import React, { useState } from "react";
+import { Geolocation } from "@capacitor/geolocation";
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonTextarea,
+  IonBackButton,
   IonButton,
   IonButtons,
-  IonList,
-  IonToast,
+  IonContent,
+  IonHeader,
   IonIcon,
-  IonBackButton,
-  IonChip,
-  IonLabel as IonLabelChip,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonPage,
+  IonTextarea,
+  IonTitle,
+  IonToast,
+  IonToolbar,
 } from "@ionic/react";
-import { Geolocation } from "@capacitor/geolocation";
-import { personCircleOutline, homeOutline, heart } from "ionicons/icons";
+import { heart, homeOutline, personCircleOutline } from "ionicons/icons";
+import { type FC, useState } from "react";
 import { useHistory } from "react-router-dom";
 import "./RegisterShelter.css";
 
-
-const RegisterShelter: React.FC = () => {
+const RegisterShelter: FC = () => {
   const [shelterName, setShelterName] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     null
   );
-    const [selectedAnimals, setSelectedAnimals] = useState<Set<string>>(
+  const [selectedAnimals, setSelectedAnimals] = useState<Set<string>>(
     new Set()
   );
   const [contact, setContact] = useState<string>("");
@@ -76,14 +73,9 @@ const RegisterShelter: React.FC = () => {
       setSelectedAnimals(new Set());
       setContact("");
       setDescription("");
-  
     } else {
       alert("Por favor, preencha todos os campos do formulário.");
     }
-  };
-
-  const goToHome = () => {
-    history.push("/home");
   };
 
   const goToAccount = () => {
@@ -104,7 +96,6 @@ const RegisterShelter: React.FC = () => {
 
   return (
     <IonPage>
-      
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
