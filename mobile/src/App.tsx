@@ -46,15 +46,6 @@ import "@ionic/react/css/palettes/dark.system.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-<<<<<<< feat/first-screen
-import AuthPage from "src/domain/auth/AuthPage/AuthPage";
-import { RepositoryProvider } from "src/domain/shared/RepositoryProvider/RepositoryProvider";
-import type { FC } from "react";
-import type { Repository } from "src/core/repository/types";
-import RegisterShelter from './domain/shelters/RegisterShelter';
-
-=======
->>>>>>> main
 
 setupIonicReact();
 
@@ -64,18 +55,6 @@ const App = () => (
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-<<<<<<< feat/first-screen
-            <Route exact path="/auth">
-              <AuthPage />
-            </Route>
-            <Route exact path="/">
-              <Redirect to="/auth" />
-            </Route>
-            <Route exact path="/registershelter">
-            <RegisterShelter />
-          </Route>
-        </IonRouterOutlet>
-=======
             <Route exact path="/" render={() => <Redirect to="/dashboard" />} />
             <Route
               exact
@@ -86,7 +65,6 @@ const App = () => (
               <DashboardPage />
             </PrivateRoute>
           </IonRouterOutlet>
->>>>>>> main
           <IonTabBar slot="bottom">
             <IonTabButton tab="test" href="/auth">
               <IonIcon aria-hidden="true" icon={triangle} />
