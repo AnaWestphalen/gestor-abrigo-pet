@@ -9,14 +9,14 @@ export type Shelter = {
   createdAt?: string;
   createdBy?: string;
   closedAt?: string;
-  id: string;
+  id: number;
   img?: string;
   logs?: ShelterLog[];
   name: string;
 };
 
 export type ShelterLog = Log & {
-  shelterId: string;
+  shelterId: number;
 };
 
 export type CreateShelterParams = {
@@ -39,11 +39,11 @@ export type AddLogParams = {
 export type RegisterPetParams = Omit<Pet, "id" | "createdAt" | "createdBy">;
 
 export type ShelterServices = {
-  getShelterDetails: (id: string) => Promise<Shelter>;
+  getShelterDetails: (id: number) => Promise<Shelter>;
   createShelter: (params: CreateShelterParams) => Promise<void>;
-  editShelter: (id: string, data: EditShelterParams) => Promise<void>;
-  closeShelter: (id: string) => Promise<void>;
-  addLog: (shelterId: string, params: AddLogParams) => Promise<void>;
-  getShelterLogs: (id: string) => Promise<ShelterLog[]>;
-  registerPet: (shelterId: string, params: RegisterPetParams) => Promise<void>;
+  editShelter: (id: number, data: EditShelterParams) => Promise<void>;
+  closeShelter: (id: number) => Promise<void>;
+  addLog: (shelterId: number, params: AddLogParams) => Promise<void>;
+  getShelterLogs: (id: number) => Promise<ShelterLog[]>;
+  registerPet: (shelterId: number, params: RegisterPetParams) => Promise<void>;
 };
