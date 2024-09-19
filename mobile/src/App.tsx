@@ -48,6 +48,7 @@ import { DashboardPage } from "src/domain/dashboard/DashboardPage/DashboardPage"
 import { PrivateRoute } from "src/domain/shared/Route/PrivateRoute";
 import ShelterPage from "src/domain/shelter/components/ShelterPage/ShelterPage";
 import { ShelterServicesProvider } from "src/domain/shelter/contexts/ShelterServices/ShelterServicesProvider";
+import RegisterShelter from "src/domain/shelters/RegisterShelter";
 
 setupIonicReact();
 
@@ -73,6 +74,9 @@ const App = () => (
               </PrivateRoute>
               <PrivateRoute path="/shelter/:id">
                 <ShelterPage />
+              </PrivateRoute>
+              <PrivateRoute exact path="/shelter/create">
+                <RegisterShelter />
               </PrivateRoute>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
