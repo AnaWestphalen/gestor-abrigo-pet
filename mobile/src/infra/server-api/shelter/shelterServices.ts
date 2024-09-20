@@ -1,32 +1,14 @@
 import type { Pet } from "src/core/pet/types";
-import type { Shelter, ShelterServices } from "src/core/shelter/types";
+import type { ShelterServices } from "src/core/shelter/types";
 import { BASE_URL } from "src/infra/server-api/config";
 
 const getShelterDetails: ShelterServices["getShelterDetails"] = async (id) => {
-  // const response = await fetch(`${BASE_URL}/shelter/${id}`, {
-  //   method: "GET",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-
-  /** mock */
-  const response = {
-    ok: true,
-    json: async () =>
-      ({
-        id,
-        name: `Abrigo #${id}`,
-        accepts: ["cachorro", "gato"],
-        address: "Rua 1, 123",
-        contact: "11999999999",
-        coordinates: {
-          latitude: -23.5505,
-          longitude: -46.6333,
-        },
-        img: "https://via.placeholder.com/150",
-      }) satisfies Shelter,
-  };
+  const response = await fetch(`${BASE_URL}/shelters/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   if (!response.ok) {
     throw new Error("Erro ao buscar detalhes do abrigo");
@@ -42,14 +24,24 @@ const getShelterDetails: ShelterServices["getShelterDetails"] = async (id) => {
 const createShelter: ShelterServices["createShelter"] = async ({
   name,
   accepts,
+  city,
+  state,
   address,
   contact,
   coordinates,
-  img,
+  // img,
 }) => {
-  const response = await fetch(`${BASE_URL}/shelter/create`, {
+  const response = await fetch(`${BASE_URL}/shelters`, {
     method: "POST",
-    body: JSON.stringify({ name, accepts, address, contact, coordinates, img }),
+    body: JSON.stringify({
+      name,
+      accepts,
+      address,
+      contact,
+      ...coordinates,
+      city,
+      state,
+    }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -61,7 +53,7 @@ const createShelter: ShelterServices["createShelter"] = async ({
 };
 
 const editShelter: ShelterServices["editShelter"] = async (id, data) => {
-  const response = await fetch(`${BASE_URL}/shelter/${id}/update`, {
+  const response = await fetch(`${BASE_URL}/shelters/${id}/update`, {
     method: "PATCH",
     body: JSON.stringify({ ...data }),
     headers: {
@@ -75,7 +67,7 @@ const editShelter: ShelterServices["editShelter"] = async (id, data) => {
 };
 
 const closeShelter: ShelterServices["closeShelter"] = async (id) => {
-  const response = await fetch(`${BASE_URL}/shelter/${id}/close`, {
+  const response = await fetch(`${BASE_URL}/shelters/${id}/close`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -88,7 +80,7 @@ const closeShelter: ShelterServices["closeShelter"] = async (id) => {
 };
 
 const addLog: ShelterServices["addLog"] = async (id, { content }) => {
-  const response = await fetch(`${BASE_URL}/shelter/${id}/log`, {
+  const response = await fetch(`${BASE_URL}/shelters/${id}/log`, {
     method: "POST",
     body: JSON.stringify({ content }),
     headers: {
@@ -102,7 +94,7 @@ const addLog: ShelterServices["addLog"] = async (id, { content }) => {
 };
 
 const getShelterLogs: ShelterServices["getShelterLogs"] = async (id) => {
-  const response = await fetch(`${BASE_URL}/shelter/${id}/logs`, {
+  const response = await fetch(`${BASE_URL}/shelters/${id}/logs`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -125,7 +117,7 @@ const registerPet: ShelterServices["registerPet"] = async (
   params
 ) => {
   const response = await fetch(
-    `${BASE_URL}/shelter/${shelterId}/pet/register`,
+    `${BASE_URL}/shelters/${shelterId}/pet/register`,
     {
       method: "POST",
       body: JSON.stringify({ ...params }),
@@ -141,7 +133,7 @@ const registerPet: ShelterServices["registerPet"] = async (
 };
 
 const getShelterPets: ShelterServices["getShelterPets"] = async (id) => {
-  // const response = await fetch(`${BASE_URL}/shelter/${id}/pets`, {
+  // const response = await fetch(`${BASE_URL}/shelters/${id}/pets`, {
   //   method: "GET",
   //   headers: {
   //     "Content-Type": "application/json",
@@ -176,23 +168,10 @@ const getShelterPets: ShelterServices["getShelterPets"] = async (id) => {
       description: "Pet 2 description",
     },
   ] satisfies Pet[];
+
   console.log(`Get shelter pets mock response for id: ${id}`, mockResponse);
-  return [
-    {
-      id: 1,
-      name: "Pet 1",
-      age: 2,
-      color: "preto",
-      description: "Pet 1 description",
-    },
-    {
-      id: 2,
-      name: "Pet 2",
-      age: 3,
-      color: "branco",
-      description: "Pet 2 description",
-    },
-  ];
+
+  return mockResponse;
 };
 
 const shelterServices: ShelterServices = {

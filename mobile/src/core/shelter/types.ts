@@ -4,15 +4,18 @@ import type { Coordinates, Log } from "src/core/shared/types";
 export type Shelter = {
   accepts?: string[];
   address?: string;
+  city?: string;
   contact?: string;
   coordinates?: Coordinates;
   createdAt?: string;
   createdBy?: string;
   closedAt?: string;
+  description?: string;
   id: number;
   img?: string;
   logs?: ShelterLog[];
   name: string;
+  state?: string;
 };
 
 export type ShelterLog = Log & {
@@ -22,10 +25,13 @@ export type ShelterLog = Log & {
 export type CreateShelterParams = {
   accepts?: string[];
   address?: string;
+  city: string;
   contact?: string;
   coordinates?: Coordinates;
-  img?: string;
+  description?: string;
+  // img?: string;
   name: string;
+  state: string;
 };
 
 export type EditShelterParams = Partial<
