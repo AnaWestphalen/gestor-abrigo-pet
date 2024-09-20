@@ -4,7 +4,7 @@ export type Coordinates = {
 };
 
 export type Log = {
-  id: string;
+  id: number;
   content: string;
   createdAt: string;
   createdBy: string;

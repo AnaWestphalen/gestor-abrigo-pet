@@ -7,7 +7,7 @@ export type Pet = {
   createdBy?: string;
   description?: string;
   foundIn?: Coordinates | string;
-  id: string;
+  id: number;
   img?: string;
   name: string;
   size?: string;
@@ -17,13 +17,13 @@ export type Pet = {
 };
 
 export type PetLog = Log & {
-  petId: string;
+  petId: number;
 };
 
 export type PetShelterHistory = {
-  id: string;
-  shelterId: string;
-  petId: string;
+  id: number;
+  shelterId: number;
+  petId: number;
   receivedAt?: string;
   leftAt?: string;
   logs?: PetLog[];
@@ -31,12 +31,13 @@ export type PetShelterHistory = {
 
 export type AddPetLogParams = {
   content: string;
+  currentUser: string;
 };
 
 export type PetServices = {
-  getPetDetails: (id: string) => Promise<Pet>;
-  getPetHistory: (id: string) => Promise<PetShelterHistory[]>;
-  editPet: (id: string, pet: Partial<Pet>) => Promise<void>;
-  addPetLog: (id: string, params: AddPetLogParams) => Promise<void>;
-  getPetLogs: (id: string) => Promise<PetLog[]>;
+  getPetDetails: (id: number) => Promise<Pet>;
+  getPetHistory: (id: number) => Promise<PetShelterHistory[]>;
+  editPet: (id: number, pet: Partial<Pet>) => Promise<void>;
+  addPetLog: (id: number, params: AddPetLogParams) => Promise<void>;
+  getPetLogs: (id: number) => Promise<PetLog[]>;
 };

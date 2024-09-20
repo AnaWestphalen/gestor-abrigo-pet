@@ -1,4 +1,5 @@
-import type { ShelterServices } from "src/core/shelter/types";
+import type { Pet } from "src/core/pet/types";
+import type { Shelter, ShelterServices } from "src/core/shelter/types";
 import { BASE_URL } from "src/infra/server-api/config";
 
 const getShelterDetails: ShelterServices["getShelterDetails"] = async (id) => {
@@ -12,18 +13,19 @@ const getShelterDetails: ShelterServices["getShelterDetails"] = async (id) => {
   /** mock */
   const response = {
     ok: true,
-    json: async () => ({
-      id,
-      name: `Abrigo #${id}`,
-      accepts: ["cachorro", "gato"],
-      address: "Rua 1, 123",
-      contact: "11999999999",
-      coordinates: {
-        latitude: -23.5505,
-        longitude: -46.6333,
-      },
-      img: "https://via.placeholder.com/150",
-    }),
+    json: async () =>
+      ({
+        id,
+        name: `Abrigo #${id}`,
+        accepts: ["cachorro", "gato"],
+        address: "Rua 1, 123",
+        contact: "11999999999",
+        coordinates: {
+          latitude: -23.5505,
+          longitude: -46.6333,
+        },
+        img: "https://via.placeholder.com/150",
+      }) satisfies Shelter,
   };
 
   if (!response.ok) {
@@ -138,6 +140,61 @@ const registerPet: ShelterServices["registerPet"] = async (
   }
 };
 
+const getShelterPets: ShelterServices["getShelterPets"] = async (id) => {
+  // const response = await fetch(`${BASE_URL}/shelter/${id}/pets`, {
+  //   method: "GET",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // });
+
+  // if (!response.ok) {
+  //   throw new Error("Erro ao buscar pets do abrigo");
+  // }
+
+  // const body = await response.json();
+
+  // console.log("Get shelter pets response body: ", body);
+
+  // return body;
+  // Mock response for development
+  const mockResponse = [
+    {
+      id: 1,
+      name: "Pet 1",
+      age: 2,
+      species: "cachorro",
+      color: "preto",
+      description: "Pet 1 description",
+    },
+    {
+      id: 2,
+      name: "Pet 2",
+      age: 3,
+      species: "gato",
+      color: "branco",
+      description: "Pet 2 description",
+    },
+  ] satisfies Pet[];
+  console.log(`Get shelter pets mock response for id: ${id}`, mockResponse);
+  return [
+    {
+      id: 1,
+      name: "Pet 1",
+      age: 2,
+      color: "preto",
+      description: "Pet 1 description",
+    },
+    {
+      id: 2,
+      name: "Pet 2",
+      age: 3,
+      color: "branco",
+      description: "Pet 2 description",
+    },
+  ];
+};
+
 const shelterServices: ShelterServices = {
   getShelterDetails,
   createShelter,
@@ -146,6 +203,7 @@ const shelterServices: ShelterServices = {
   addLog,
   getShelterLogs,
   registerPet,
+  getShelterPets,
 };
 
 export default shelterServices;
