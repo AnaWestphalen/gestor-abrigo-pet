@@ -90,7 +90,7 @@ const PetPage: React.FC = () => {
         content,
         currentUser: currentUser!.name || currentUser!.email,
       });
-      console.log("Atividade adicionada com sucesso? ", success);
+      console.log("Atividade adicionada com sucesso? ", !!success);
       if (success) {
         const { success, error } = await getPetLogs(Number(params.id));
         console.log("Buscando logs para o pet de id: ", params);
