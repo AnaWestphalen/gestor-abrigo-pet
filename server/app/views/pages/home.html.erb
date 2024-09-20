@@ -28,6 +28,17 @@
             <%= submit_tag "Buscar", class: "btn btn-primary" %>
           <% end %>
         </div>
+
+        <div>
+          <h2>Buscar por Nome do Animal</h2>
+          <%= form_with url: search_pets_path, method: :get, local: true do %>
+            <div class="form-group">
+              <label for="animal_name">Nome do Animal:</label>
+              <%= text_field_tag :name, params[:name], placeholder: "Digite o nome do animal", class: "form-control" %>
+            </div>
+            <%= submit_tag "Buscar", class: "btn btn-primary" %>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>

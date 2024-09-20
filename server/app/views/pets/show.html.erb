@@ -1,0 +1,21 @@
+<h1><%= @pet.name %></h1>
+
+<% if @pet.img.attached? %>
+  <%= image_tag @pet.img, alt: @pet.name, class: 'img-fluid' %>
+<% else %>
+  <p><em>Imagem não disponível</em></p>
+<% end %>
+
+<p><strong>Espécie:</strong> <%= @pet.specie %></p>
+<p><strong>Cor:</strong> <%= @pet.color %></p>
+<p><strong>Tamanho:</strong> <%= @pet.size %></p>
+<p><strong>Idade:</strong> <%= @pet.age %></p>
+<p><strong>Descrição:</strong> <%= @pet.description %></p>
+<p><strong>Encontrado em:</strong> <%= @pet.found_in %></p>
+<p><strong>Nome do Tutor:</strong> <%= @pet.tutor_name %></p>
+<p><strong>Contato do Tutor:</strong> <%= @pet.tutor_contact %></p>
+<p><strong>Data de entrada:</strong> <%= @pet.received_at %></p>
+<p><strong>Data de saída:</strong> <%= @pet.left_at %></p>
+
+<%= link_to 'Editar', edit_shelter_pet_path(@shelter, @pet), class: 'btn btn-warning' %>
+<%= link_to 'Voltar', shelter_pets_path(@shelter), class: 'btn btn-secondary' %>

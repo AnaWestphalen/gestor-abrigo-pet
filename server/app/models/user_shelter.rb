@@ -14,5 +14,6 @@ class UserShelter < ApplicationRecord
   belongs_to :user
   belongs_to :shelter
 
-  validates :role, presence: true, uniqueness: true, length: { maximum: 100 }
+  validates :role, presence: true, length: { maximum: 100 }
+  validates :user_id, uniqueness: { scope: :shelter_id, message: "já está vinculado a este abrigo." }
 end
