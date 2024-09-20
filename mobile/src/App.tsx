@@ -48,6 +48,7 @@ import { DashboardPage } from "src/domain/dashboard/DashboardPage/DashboardPage"
 import PetPage from "src/domain/pet/components/PetPage/PetPage";
 import { PetServicesProvider } from "src/domain/pet/contexts/PetServices/PetServicesProvider";
 import { PrivateRoute } from "src/domain/shared/Route/PrivateRoute";
+import RegisterShelter from "src/domain/shelter/components/RegisterShelter/RegisterShelter";
 import ShelterPage from "src/domain/shelter/components/ShelterPage/ShelterPage";
 import ShelterPetsPage from "src/domain/shelter/components/ShelterPetsPage/ShelterPetsPage";
 import { ShelterServicesProvider } from "src/domain/shelter/contexts/ShelterServices/ShelterServicesProvider";
@@ -80,6 +81,9 @@ const App = () => (
                 </PrivateRoute>
                 <PrivateRoute exact path="/shelter/:id">
                   <ShelterPage />
+                </PrivateRoute>
+                <PrivateRoute exact path="/shelter/create">
+                  <RegisterShelter />
                 </PrivateRoute>
                 <PrivateRoute exact path="/pet/:id">
                   <PetPage />
