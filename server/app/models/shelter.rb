@@ -24,8 +24,7 @@ class Shelter < ApplicationRecord
   belongs_to :user, foreign_key: :created_by
   has_many :user_shelters
   has_many :users, through: :user_shelters
-  has_many :pet_shelters
-  has_many :pets, through: :pet_shelters
+  has_many :pets
   has_many :shelter_logs
 
   geocoded_by :full_address

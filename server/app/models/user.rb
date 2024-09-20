@@ -20,5 +20,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :shelters, foreign_key: :created_by, dependent: :destroy
+  has_many :user_shelters
+  has_many :shelters, through: :user_shelters, foreign_key: :created_by, dependent: :destroy
 end
