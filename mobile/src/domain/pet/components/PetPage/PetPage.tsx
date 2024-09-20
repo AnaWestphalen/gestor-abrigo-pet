@@ -54,7 +54,7 @@ const PetPage: React.FC = () => {
     const fetchPetLogs = async () => {
       const { success, error } = await getPetLogs(Number(params.id));
       if (success) {
-        setPetLogs(success);
+        setPetLogs([...success]);
       } else {
         console.error("Falha ao buscar logs do pet:", error);
       }
@@ -194,7 +194,7 @@ const PetPage: React.FC = () => {
         </IonCard>
 
         <div>
-          <h2 className="ion-padding">Atividades</h2>
+          <h2 className="ion-padding-horizontal ion-padding-top">Atividades</h2>
           <div>
             <IonCard>
               <form onSubmit={handleAddPetLog}>
@@ -211,7 +211,12 @@ const PetPage: React.FC = () => {
 
                 <IonGrid>
                   <IonRow className="ion-padding-bottom ion-justify-content-center">
-                    <IonButton type="submit" fill="clear" inputMode="text">
+                    <IonButton
+                      size="small"
+                      type="submit"
+                      fill="solid"
+                      inputMode="text"
+                    >
                       <IonIcon icon={addOutline} slot="start" /> Adicionar
                     </IonButton>
                   </IonRow>
