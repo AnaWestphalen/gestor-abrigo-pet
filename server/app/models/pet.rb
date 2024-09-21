@@ -24,6 +24,7 @@ class Pet < ApplicationRecord
   belongs_to :shelter
 
   has_many :pet_logs
+  has_many :logs, through: :pet_logs
 
   has_one_attached :img
 

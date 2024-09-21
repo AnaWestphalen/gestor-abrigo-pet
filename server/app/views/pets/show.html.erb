@@ -17,5 +17,13 @@
 <p><strong>Data de entrada:</strong> <%= @pet.received_at %></p>
 <p><strong>Data de saída:</strong> <%= @pet.left_at %></p>
 
-<%= link_to 'Editar', edit_shelter_pet_path(@shelter, @pet), class: 'btn btn-warning' %>
-<%= link_to 'Voltar', shelter_pets_path(@shelter), class: 'btn btn-secondary' %>
+<div class="actions">
+  <%= link_to 'Editar', edit_shelter_pet_path(@shelter, @pet), class: 'btn btn-warning' %>
+  <%= link_to 'Voltar', shelter_pets_path(@shelter), class: 'btn btn-secondary' %>
+
+  <!-- Botão para criar um novo log -->
+  <%= link_to 'Criar um novo log', new_shelter_pet_log_path(@shelter, @pet), class: 'btn btn-primary' %>
+
+  <!-- Botão para ver os logs -->
+  <%= link_to 'Ver os logs', shelter_pet_logs_path(@shelter, @pet), class: 'btn btn-info' %>
+</div>
