@@ -11,7 +11,7 @@
 
 class Log < ApplicationRecord
   belongs_to :created_by, class_name: 'User'
-  has_many :pet_logs
+  has_many :pet_logs, dependent: :destroy
   has_many :shelter_logs
 
   validates :content, presence: true, length: { maximum: 500 }

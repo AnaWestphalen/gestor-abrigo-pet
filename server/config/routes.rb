@@ -11,6 +11,9 @@ Rails.application.routes.draw do
       collection do
         get :search
       end
+
+      # Rotas aninhadas para logs relacionados aos pets
+      resources :logs, only: %i[index show new create edit update destroy]
     end
   end
 
