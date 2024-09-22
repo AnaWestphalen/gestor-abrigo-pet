@@ -3,12 +3,12 @@ class SheltersController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
   after_action :verify_authorized, except: [:index, :search]
 
-  # GET /shelters
+  # GET /api/shelters
   def index
     @shelters = Shelter.all
   end
 
-  # GET /shelters/:id
+  # GET /api/shelters/:id
   def show
     authorize @shelter
 
@@ -22,12 +22,12 @@ class SheltersController < ApplicationController
     end
   end
 
-  # GET /shelters/new
+  # GET /api/shelters/new
   def new
     @shelter = Shelter.new
   end
 
-  # POST /shelters
+  # POST /api/shelters
   def create
     @shelter = current_user.shelters.new(shelter_params)
     authorize @shelter
@@ -38,12 +38,12 @@ class SheltersController < ApplicationController
     end
   end
 
-  # GET /shelters/:id/edit
+  # GET /api/shelters/:id/edit
   def edit
     authorize @shelter
   end
 
-  # PATCH/PUT /shelters/:id
+  # PATCH/PUT /api/shelters/:id
   def update
     authorize @shelter
     if @shelter.update(shelter_params)
@@ -53,7 +53,7 @@ class SheltersController < ApplicationController
     end
   end
 
-  # Search method (GET /shelters/search?name=X&city=Y)
+  # Search method (GET /api/shelters/search?name=X&city=Y)
   def search
     if params[:name].present? && params[:city].present?
       @shelters = Shelter.where('name ILIKE ? AND city ILIKE ?', "%#{params[:name]}%", "%#{params[:city]}%")
@@ -67,11 +67,11 @@ class SheltersController < ApplicationController
     render :index
   end
 
-  # DELETE /shelters/:id
+  # DELETE /api/shelters/:id
   def destroy
     authorize @shelter
     @shelter.destroy
-    redirect_to shelters_url, notice: 'O registro do abrigo foi excluído com sucesso!'
+    redirect_to api_shelters_url, notice: 'O registro do abrigo foi excluído com sucesso!'
   end
 
   private

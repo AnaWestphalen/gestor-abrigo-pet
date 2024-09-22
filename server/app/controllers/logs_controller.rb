@@ -6,14 +6,14 @@ class LogsController < ApplicationController
   before_action :authorize_shelter_user
   before_action :authorize_log_creator, only: [:edit, :update, :destroy]
 
-  # GET /shelters/:shelter_id/pets/:pet_id/logs
+  # GET /api/shelters/:shelter_id/pets/:pet_id/logs
   def index
     @shelter = Shelter.find(params[:shelter_id])
     @pet = Pet.find(params[:pet_id])
     @logs = @pet.logs
   end
 
-  # GET /shelters/:shelter_id/pets/:pet_id/logs/:id
+  # GET /api/shelters/:shelter_id/pets/:pet_id/logs/:id
   def show
   end
 
@@ -24,7 +24,7 @@ class LogsController < ApplicationController
     @log = @pet.logs.build
   end
 
-  # POST /shelters/:shelter_id/pets/:pet_id/logs
+  # POST /api/shelters/:shelter_id/pets/:pet_id/logs
   def create
     @shelter = Shelter.find(params[:shelter_id])
     @pet = Pet.find(params[:pet_id])
@@ -39,11 +39,11 @@ class LogsController < ApplicationController
     end
   end
 
-  # GET /shelters/:shelter_id/pets/:pet_id/logs/:id/edit
+  # GET /api/shelters/:shelter_id/pets/:pet_id/logs/:id/edit
   def edit
   end
 
-  # PATCH/PUT /shelters/:shelter_id/pets/:pet_id/logs/:id
+  # PATCH/PUT /api/shelters/:shelter_id/pets/:pet_id/logs/:id
   def update
     if @log.update(log_params)
       redirect_to shelter_pet_log_path(@shelter, @pet, @log), notice: 'Log atualizado com sucesso.'
@@ -52,7 +52,7 @@ class LogsController < ApplicationController
     end
   end
 
-  # DELETE /shelters/:shelter_id/pets/:pet_id/logs/:id
+  # DELETE /api/shelters/:shelter_id/pets/:pet_id/logs/:id
   def destroy
     @log.destroy
     redirect_to shelter_pet_logs_path(@shelter, @pet), notice: 'Log excluído com sucesso.'

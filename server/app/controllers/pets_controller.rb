@@ -9,55 +9,53 @@ class PetsController < ApplicationController
     authorize @pet
   end
 
-  # GET /shelters/:shelter_id/pets
+  # GET /api/shelters/:shelter_id/pets/:pet_id/logs
   def index
     @shelter = Shelter.find(params[:shelter_id])
-    @pets = policy_scope(Pet).where(shelter: @shelter)
+    @pet = Pet.find(params[:pet_id])
+    @logs = @pet.logs
   end
 
-  # GET /shelters/:shelter_id/pets/:id
+  # GET /api/shelters/:shelter_id/pets/:pet_id/logs/:id
   def show
-    @shelter = @pet.shelter
-    authorize @pet
   end
 
-  # GET /shelters/:shelter_id/pets/new
+  # GET /shelters/:shelter_id/pets/:pet_id/logs/new
   def new
     @shelter = Shelter.find(params[:shelter_id])
-    @pet = @shelter.pets.new
-    authorize @pet
+    @pet = Pet.find(params[:pet_id])
+    @log = @pet.logs.build
   end
 
-  # POST /shelters/:shelter_id/pets
+  # POST /api/shelters/:shelter_id/pets/:pet_id/logs
   def create
     @shelter = Shelter.find(params[:shelter_id])
-    @pet = @shelter.pets.new(pet_params)
-    authorize @pet
-    if @pet.save
-      redirect_to shelter_pets_path(@shelter), notice: 'O animal foi registrado com sucesso!'
+    @pet = Pet.find(params[:pet_id])
+    @log = Log.new(log_params)
+    @log.created_by = current_user
+
+    if @log.save
+      PetLog.create(pet: @pet, log: @log)
+      redirect_to shelter_pet_logs_path(@shelter, @pet), notice: 'Log criado com sucesso.'
     else
       render :new
     end
   end
 
-  # GET /shelters/:shelter_id/pets/:id/edit
+  # GET /api/shelters/:shelter_id/pets/:pet_id/logs/:id/edit
   def edit
-    @shelter = @pet.shelter
-    authorize @pet
   end
 
-  # PATCH/PUT /shelters/:shelter_id/pets/:id
+  # PATCH/PUT /api/shelters/:shelter_id/pets/:pet_id/logs/:id
   def update
-    authorize @pet
-    if @pet.update(pet_params)
-      @shelter = @pet.shelter
-      redirect_to shelter_pet_path(@shelter, @pet), notice: 'O registro do animal foi atualizado com sucesso!'
+    if @log.update(log_params)
+      redirect_to shelter_pet_log_path(@shelter, @pet, @log), notice: 'Log atualizado com sucesso.'
     else
       render :edit
     end
   end
 
-  # DELETE /shelters/:shelter_id/pets/:id
+  # DELETE /api/shelters/:shelter_id/pets/:pet_id/logs/:id
   def destroy
     authorize @pet
     @shelter = @pet.shelter
