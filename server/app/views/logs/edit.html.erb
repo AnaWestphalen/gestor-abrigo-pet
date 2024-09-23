@@ -1,0 +1,25 @@
+<h1>Editar Log do Animal: <%= @pet.name %></h1>
+
+<%= form_with(model: [@shelter, @pet, @log], local: true) do |form| %>
+  <% if @log.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@log.errors.count, "erro") %> impediram o log de ser salvo:</h2>
+      <ul>
+        <% @log.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :content, 'Conteúdo do Log' %>
+    <%= form.text_area :content, rows: 5 %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Atualizar Log' %>
+  </div>
+<% end %>
+
+<%= link_to 'Voltar para Logs', shelter_pet_logs_path(@shelter, @pet) %>

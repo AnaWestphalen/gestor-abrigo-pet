@@ -1,16 +1,18 @@
 class SheltersController < ApplicationController
   before_action :set_shelter, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :authorize_user, only: [:new, :create, :edit, :update, :destroy]
+  after_action :verify_authorized, except: [:index, :search]
 
-  # GET /shelters
+  # GET /api/shelters
   def index
     @shelters = Shelter.all
   end
 
-  # GET /shelters/:id
+  # GET /api/shelters/:id
   def show
-    if @shelter.latitude && @shelter.longitude
+    authorize @shelter
+
+    if @shelter.geocoded?
       @markers = [
         {
           lat: @shelter.latitude,
@@ -20,14 +22,15 @@ class SheltersController < ApplicationController
     end
   end
 
-  # GET /shelters/new
+  # GET /api/shelters/new
   def new
     @shelter = Shelter.new
   end
 
-  # POST /shelters
+  # POST /api/shelters
   def create
     @shelter = current_user.shelters.new(shelter_params)
+    authorize @shelter
     if @shelter.save
       redirect_to @shelter, notice: 'O abrigo foi registrado com sucesso!'
     else
@@ -35,12 +38,14 @@ class SheltersController < ApplicationController
     end
   end
 
-  # GET /shelters/:id/edit
+  # GET /api/shelters/:id/edit
   def edit
+    authorize @shelter
   end
 
-  # PATCH/PUT /shelters/:id
+  # PATCH/PUT /api/shelters/:id
   def update
+    authorize @shelter
     if @shelter.update(shelter_params)
       redirect_to @shelter, notice: 'O registro do abrigo foi atualizado com sucesso!'
     else
@@ -48,7 +53,7 @@ class SheltersController < ApplicationController
     end
   end
 
-  # Search method
+  # Search method (GET /api/shelters/search?name=X&city=Y)
   def search
     if params[:name].present? && params[:city].present?
       @shelters = Shelter.where('name ILIKE ? AND city ILIKE ?', "%#{params[:name]}%", "%#{params[:city]}%")
@@ -62,10 +67,11 @@ class SheltersController < ApplicationController
     render :index
   end
 
-  # DELETE /shelters/:id
+  # DELETE /api/shelters/:id
   def destroy
+    authorize @shelter
     @shelter.destroy
-    redirect_to shelters_url, notice: 'O registro do abrigo foi excluído com sucesso!'
+    redirect_to api_shelters_url, notice: 'O registro do abrigo foi excluído com sucesso!'
   end
 
   private
@@ -73,15 +79,6 @@ class SheltersController < ApplicationController
   # Callback to set shelter before actions like show, edit, update, and destroy
   def set_shelter
     @shelter = Shelter.find(params[:id])
-  end
-
-  # Check if the user has the role 'gestor' and the ownership of the shelter if applicable
-  def authorize_user
-    if current_user.role != 'gestor'
-      redirect_to shelters_path, alert: 'Você não tem permissão para realizar esta ação.'
-    elsif ['edit', 'update', 'destroy'].include?(action_name) && @shelter.created_by != current_user.id
-      redirect_to shelters_path, alert: 'Você não tem permissão para editar este abrigo.'
-    end
   end
 
   # Only allow a list of trusted parameters through

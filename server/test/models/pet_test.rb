@@ -15,6 +15,9 @@
 #  tutor_contact :string
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  shelter_id    :bigint
+#  received_at   :datetime
+#  left_at       :datetime
 #
 require "test_helper"
 
