@@ -11,10 +11,12 @@ class LogsController < ApplicationController
     @shelter = Shelter.find(params[:shelter_id])
     @pet = Pet.find(params[:pet_id])
     @logs = @pet.logs
+    render json: @logs
   end
 
   # GET /api/shelters/:shelter_id/pets/:pet_id/logs/:id
   def show
+    render json: @log
   end
 
   # GET /shelters/:shelter_id/pets/:pet_id/logs/new
@@ -33,9 +35,9 @@ class LogsController < ApplicationController
 
     if @log.save
       PetLog.create(pet: @pet, log: @log)
-      redirect_to shelter_pet_logs_path(@shelter, @pet), notice: 'Log criado com sucesso.'
+      render json: @log, status: :created
     else
-      render :new
+      render json: { errors: @log.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -46,16 +48,16 @@ class LogsController < ApplicationController
   # PATCH/PUT /api/shelters/:shelter_id/pets/:pet_id/logs/:id
   def update
     if @log.update(log_params)
-      redirect_to shelter_pet_log_path(@shelter, @pet, @log), notice: 'Log atualizado com sucesso.'
+      render json: @log, status: :ok
     else
-      render :edit
+      render json: { errors: @log.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   # DELETE /api/shelters/:shelter_id/pets/:pet_id/logs/:id
   def destroy
     @log.destroy
-    redirect_to shelter_pet_logs_path(@shelter, @pet), notice: 'Log excluído com sucesso.'
+    head :no_content
   end
 
   private
@@ -78,13 +80,13 @@ class LogsController < ApplicationController
 
   def authorize_shelter_user
     unless @shelter.users.include?(current_user)
-      redirect_to root_path, alert: 'Você não tem permissão para acessar este abrigo.'
+      render json: { error: 'Você não tem permissão para acessar este abrigo.' }, status: :forbidden
     end
   end
 
   def authorize_log_creator
     unless @log.created_by == current_user
-      redirect_to shelter_pet_logs_path(@shelter, @pet), alert: 'Você não tem permissão para editar ou excluir este log.'
+      render json: { error: 'Você não tem permissão para editar ou excluir este log.' }, status: :forbidden
     end
   end
 end

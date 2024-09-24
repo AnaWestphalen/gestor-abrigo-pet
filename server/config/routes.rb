@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   scope '/api' do
-    devise_for :users
+    devise_for :users, controllers: {
+      sessions: 'users/sessions',
+      registrations: 'users/registrations'
+    }
+
     root to: 'pages#home'
 
     # Rotas para abrigos com rotas aninhadas de animais

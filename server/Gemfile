@@ -57,6 +57,7 @@ gem 'geocoder'
 gem 'pg_search'
 gem 'jquery-rails'
 gem 'webpacker'
+gem 'rack-cors'
 
 # gem devise
 gem 'devise'
