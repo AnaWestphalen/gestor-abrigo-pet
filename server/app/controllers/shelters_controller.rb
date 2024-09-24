@@ -6,12 +6,15 @@ class SheltersController < ApplicationController
   # GET /api/shelters
   def index
     @shelters = Shelter.all
+    render json: @shelters
   end
 
   # GET /api/shelters/:id
   def show
     authorize @shelter
 
+    response = { shelter: @shelter }
+    
     if @shelter.geocoded?
       @markers = [
         {
@@ -20,6 +23,8 @@ class SheltersController < ApplicationController
         }
       ]
     end
+
+    render json: response
   end
 
   # GET /api/shelters/new
@@ -31,10 +36,11 @@ class SheltersController < ApplicationController
   def create
     @shelter = current_user.shelters.new(shelter_params)
     authorize @shelter
+
     if @shelter.save
-      redirect_to @shelter, notice: 'O abrigo foi registrado com sucesso!'
+      render json: @shelter, status: :created
     else
-      render :new
+      render json: { errors: @shelter.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -47,13 +53,14 @@ class SheltersController < ApplicationController
   def update
     authorize @shelter
     if @shelter.update(shelter_params)
-      redirect_to @shelter, notice: 'O registro do abrigo foi atualizado com sucesso!'
+      render json: @shelter
     else
-      render :edit
+      render json: { errors: @shelter.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   # Search method (GET /api/shelters/search?name=X&city=Y)
+  # GET /api/shelters/search
   def search
     if params[:name].present? && params[:city].present?
       @shelters = Shelter.where('name ILIKE ? AND city ILIKE ?', "%#{params[:name]}%", "%#{params[:city]}%")
@@ -64,14 +71,14 @@ class SheltersController < ApplicationController
     else
       @shelters = Shelter.all
     end
-    render :index
+    render json: @shelters
   end
 
   # DELETE /api/shelters/:id
   def destroy
     authorize @shelter
     @shelter.destroy
-    redirect_to api_shelters_url, notice: 'O registro do abrigo foi excluído com sucesso!'
+    head :no_content
   end
 
   private

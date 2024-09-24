@@ -14,10 +14,12 @@ class PetsController < ApplicationController
     @shelter = Shelter.find(params[:shelter_id])
     @pet = Pet.find(params[:pet_id])
     @logs = @pet.logs
+    render json: @pets
   end
 
   # GET /api/shelters/:shelter_id/pets/:pet_id/logs/:id
   def show
+    render json: @pet
   end
 
   # GET /shelters/:shelter_id/pets/:pet_id/logs/new
@@ -27,7 +29,7 @@ class PetsController < ApplicationController
     @log = @pet.logs.build
   end
 
-  # POST /api/shelters/:shelter_id/pets/:pet_id/logs
+  # POST /api/shelters/:shelter_id/pets
   def create
     @shelter = Shelter.find(params[:shelter_id])
     @pet = Pet.find(params[:pet_id])
@@ -36,9 +38,9 @@ class PetsController < ApplicationController
 
     if @log.save
       PetLog.create(pet: @pet, log: @log)
-      redirect_to shelter_pet_logs_path(@shelter, @pet), notice: 'Log criado com sucesso.'
+      render json: { message: 'Log criado com sucesso.', log: @log }, status: :created
     else
-      render :new
+      render json: { errors: @log.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -49,9 +51,9 @@ class PetsController < ApplicationController
   # PATCH/PUT /api/shelters/:shelter_id/pets/:pet_id/logs/:id
   def update
     if @log.update(log_params)
-      redirect_to shelter_pet_log_path(@shelter, @pet, @log), notice: 'Log atualizado com sucesso.'
+      render json: { message: 'Log atualizado com sucesso.', log: @log }, status: :ok
     else
-      render :edit
+      render json: { errors: @log.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -60,7 +62,7 @@ class PetsController < ApplicationController
     authorize @pet
     @shelter = @pet.shelter
     @pet.destroy
-    redirect_to shelter_pets_path(@shelter), notice: 'O registro do animal foi excluído com sucesso!'
+    head :no_content
   end
 
   def search
@@ -72,7 +74,7 @@ class PetsController < ApplicationController
         @pets = @pets.where('name ILIKE ?', "%#{params[:name]}%")
       end
 
-      render :index
+      render json: @pets
     else
       @pets = Pet.all
 
@@ -82,7 +84,7 @@ class PetsController < ApplicationController
 
       @shelters = Shelter.where(id: @pets.pluck(:shelter_id).uniq)
 
-      render :search_results
+      render json: @pets
     end
   end
 
@@ -99,13 +101,13 @@ class PetsController < ApplicationController
   def authorize_shelter_user
     @shelter = Shelter.find(params[:shelter_id])
     unless @shelter.users.include?(current_user)
-      redirect_to root_path, alert: 'Você não tem permissão para acessar este abrigo.'
+      render json: { error: 'Você não tem permissão para acessar este abrigo.' }, status: :forbidden
     end
   end
 
   def authorize_gestor_role
     unless current_user.role == 'gestor'
-      redirect_to shelter_pets_path(@pet.shelters.first), alert: 'Você não tem permissão para excluir este registro.'
+      render json: { error: 'Você não tem permissão para excluir este registro.' }, status: :forbidden
     end
   end
 end
