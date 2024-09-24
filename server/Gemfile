@@ -57,6 +57,8 @@ gem 'geocoder'
 gem 'pg_search'
 gem 'jquery-rails'
 gem 'webpacker'
+gem 'cloudinary', '~> 1.23.0'
+gem 'activestorage', '~> 7.0'
 
 # gem devise
 gem 'devise'
