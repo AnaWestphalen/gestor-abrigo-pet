@@ -13,6 +13,7 @@ export type RegisterParams = {
   name?: string;
   password: string;
   phone?: string;
+  role?: string;
 };
 
 export type LoginParams = {

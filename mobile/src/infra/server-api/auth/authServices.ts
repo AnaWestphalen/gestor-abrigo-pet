@@ -1,30 +1,31 @@
 import type { AuthServices, User } from "src/core/auth/types";
-// import { BASE_URL } from "src/infra/server-api/config";
+import { BASE_URL } from "src/infra/server-api/config";
 
-let isMockLoggedIn = false;
+const AUTH_ROUTES = {
+  login: `${BASE_URL}/users/sign_in`,
+  register: `${BASE_URL}/users`,
+  logout: `${BASE_URL}/users/sign_out`,
+};
 
-// const AUTH_ROUTES = {
-//   login: "/auth/login",
-//   register: "/auth/register",
-//   logout: "/auth/logout",
-//   whoami: "/auth/whoami",
-// };
+let loggedUser: User | undefined = undefined;
 
-const login: AuthServices["login"] = async () => {
-  // const response = await fetch(`${BASE_URL}${AUTH_ROUTES.login}`, {
-  //   method: "POST",
-  //   body: JSON.stringify({ email, password }),
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
+let authorization = "";
 
-  isMockLoggedIn = true;
-
-  const response = {
-    ok: true,
-    json: async () => Promise.resolve(undefined),
+const login: AuthServices["login"] = async ({ email, password }) => {
+  const adaptedParams = {
+    user: {
+      email,
+      password,
+    },
   };
+
+  const response = await fetch(AUTH_ROUTES.login, {
+    method: "POST",
+    body: JSON.stringify(adaptedParams),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   if (!response.ok) {
     throw new Error("E-mail ou senha inválidos");
@@ -34,22 +35,42 @@ const login: AuthServices["login"] = async () => {
 
   console.log("Login reponse body: ", body);
 
+  authorization = `Bearer ${body.auth_token}`;
+  loggedUser = {
+    id: body.id,
+    email: body.email,
+    name: body.name,
+    phone: body.phone,
+  };
+
   return body;
 };
 
-const register: AuthServices["register"] = async () => {
-  // const response = await fetch(`${BASE_URL}${AUTH_ROUTES.register}`, {
-  //   method: "POST",
-  //   body: JSON.stringify(params),
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-
-  const response = {
-    ok: true,
-    json: async () => Promise.resolve(undefined),
+const register: AuthServices["register"] = async ({
+  email,
+  password,
+  name,
+  phone,
+  role,
+}) => {
+  const adaptedParams = {
+    user: {
+      email,
+      password,
+      password_confirmation: password,
+      name,
+      phone,
+      role: role || "voluntario",
+    },
   };
+
+  const response = await fetch(AUTH_ROUTES.register, {
+    method: "POST",
+    body: JSON.stringify(adaptedParams),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   if (!response.ok) {
     throw new Error("Erro ao registrar usuário");
@@ -63,60 +84,23 @@ const register: AuthServices["register"] = async () => {
 };
 
 const logout: AuthServices["logout"] = async () => {
-  // const response = await fetch(`${BASE_URL}${AUTH_ROUTES.logout}`, {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-
-  const response = {
-    ok: true,
-    json: async () => Promise.resolve(undefined),
-  };
-
-  isMockLoggedIn = false;
+  const response = await fetch(AUTH_ROUTES.logout, {
+    method: "DELETE",
+    headers: {
+      Authorization: authorization,
+      "Content-Type": "application/json",
+    },
+  });
 
   if (!response.ok) {
     throw new Error("Erro ao deslogar usuário");
   }
+
+  loggedUser = undefined;
 };
 
 const whoami: AuthServices["whoami"] = async () => {
-  // const response = await fetch(`${BASE_URL}${AUTH_ROUTES.whoami}`, {
-  //   method: "GET",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-
-  const response = {
-    ok: true,
-    json: async () =>
-      Promise.resolve(
-        isMockLoggedIn
-          ? ({
-              id: 1,
-              name: "John Doe",
-              email: "john@doe.com",
-              phone: "123456789",
-              role: "user",
-              createdAt: "2021-09-01T00:00:00Z",
-              allowedIn: [1, 2],
-            } satisfies User)
-          : undefined
-      ),
-  };
-
-  if (!response.ok) {
-    throw new Error("Erro ao buscar usuário");
-  }
-
-  const body = await response.json();
-
-  console.log("Whoami reponse body: ", body);
-
-  return body;
+  return loggedUser;
 };
 
 const authServices: AuthServices = {

@@ -1,5 +1,18 @@
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .logo {
   height: 120px;
   width: 120px;
   aspect-ratio: 1/1;
+}
+
+.form-gap {
+  padding: 0.5em 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }

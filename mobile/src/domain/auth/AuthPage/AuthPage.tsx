@@ -5,6 +5,8 @@ import {
   IonIcon,
   IonInput,
   IonPage,
+  IonSelect,
+  IonSelectOption,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -30,19 +32,22 @@ const AuthPage: FC<RouteComponentProps> = ({ history }) => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Meu Abrigo</IonTitle>
+          <IonTitle className="ion-text-center">Meu Abrigo</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen className="ion-padding">
-        <IonIcon
-          className="logo ion-padding"
-          src={"icons/shelter-icon.svg"}
-          color="primary"
-        />
+        <div className="logo-container">
+          <IonIcon
+            className="logo ion-padding"
+            src={"icons/shelter-icon.svg"}
+            color="primary"
+          />
+        </div>
         {mode === "login" ? (
           <div>
             <h1>Tem conta?</h1>
             <form
+              className="form-gap"
               onSubmit={async (event) => {
                 event.preventDefault();
                 const formData = new FormData(event.target as HTMLFormElement);
@@ -54,8 +59,19 @@ const AuthPage: FC<RouteComponentProps> = ({ history }) => {
                 }
               }}
             >
-              <IonInput placeholder="Email" />
-              <IonInput type="password" placeholder="Password" />
+              <IonInput
+                name="email"
+                label="Email"
+                labelPlacement="floating"
+                fill="solid"
+              />
+              <IonInput
+                name="password"
+                label="Senha"
+                labelPlacement="floating"
+                fill="solid"
+                type="password"
+              />
               <IonButton type="submit" expand="full">
                 Login
               </IonButton>
@@ -73,6 +89,7 @@ const AuthPage: FC<RouteComponentProps> = ({ history }) => {
           <div>
             <h1>Crie sua conta</h1>
             <form
+              className="form-gap"
               onSubmit={async (event) => {
                 event.preventDefault();
                 const formData = new FormData(event.target as HTMLFormElement);
@@ -92,10 +109,21 @@ const AuthPage: FC<RouteComponentProps> = ({ history }) => {
                 }
               }}
             >
-              <IonInput name="name" placeholder="Nome" />
-              <IonInput name="email" placeholder="Email" />
-              <IonInput name="password" type="password" placeholder="Senha" />
-              <IonInput name="phone" placeholder="Celular" />
+              <IonInput fill="solid" name="name" placeholder="Nome" />
+              <IonInput fill="solid" name="email" placeholder="Email" />
+              <IonInput
+                fill="solid"
+                name="password"
+                type="password"
+                placeholder="Senha"
+              />
+              <IonInput fill="solid" name="phone" placeholder="Celular" />
+              <IonSelect value={"voluntario"} name="role">
+                <IonSelectOption value="voluntario">Voluntário</IonSelectOption>
+                <IonSelectOption value="gestor">
+                  Gestor de Abrigo
+                </IonSelectOption>
+              </IonSelect>
               <IonButton type="submit">
                 <IonIcon color="white" slot="start" icon={checkmark} />
                 Começar
