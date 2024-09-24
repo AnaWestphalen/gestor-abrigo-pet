@@ -1,4 +1,4 @@
-class ApplicationController < ActionController::Base
+class ApplicationController < ActionController::API
   include Pundit
 
   # Desabilitar CSRF para rotas da API
@@ -15,7 +15,6 @@ class ApplicationController < ActionController::Base
   end
 
   def user_not_authorized
-    flash[:alert] = "Você não tem permissão para realizar essa ação."
-    redirect_to(request.referrer || root_path)
+    render json: { error: 'Você não tem permissão para realizar essa ação.' }, status: :forbidden
   end
 end
