@@ -28,18 +28,8 @@ import "@ionic/react/css/palettes/dark.system.css";
 /* Theme variables */
 import "./theme/variables.css";
 
-import {
-  IonApp,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-  setupIonicReact,
-} from "@ionic/react";
+import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { triangle } from "ionicons/icons";
 import { Redirect, Route } from "react-router-dom";
 
 import AuthPage from "src/domain/auth/AuthPage/AuthPage";
@@ -48,6 +38,7 @@ import { DashboardPage } from "src/domain/dashboard/DashboardPage/DashboardPage"
 import PetPage from "src/domain/pet/components/PetPage/PetPage";
 import { PetServicesProvider } from "src/domain/pet/contexts/PetServices/PetServicesProvider";
 import { PrivateRoute } from "src/domain/shared/Route/PrivateRoute";
+import { ToastProvider } from "src/domain/shared/ToastProvider/ToastProvider";
 import RegisterShelter from "src/domain/shelter/components/RegisterShelter/RegisterShelter";
 import ShelterPage from "src/domain/shelter/components/ShelterPage/ShelterPage";
 import ShelterPetsPage from "src/domain/shelter/components/ShelterPetsPage/ShelterPetsPage";
@@ -57,12 +48,12 @@ setupIonicReact();
 
 const App = () => (
   <IonApp>
-    <AuthServicesProvider>
-      <ShelterServicesProvider>
-        <PetServicesProvider>
-          <IonReactRouter>
-            <IonTabs>
-              <IonRouterOutlet>
+    <IonReactRouter>
+      <IonRouterOutlet>
+        <ToastProvider>
+          <AuthServicesProvider>
+            <ShelterServicesProvider>
+              <PetServicesProvider>
                 <Route
                   exact
                   path="/"
@@ -88,18 +79,12 @@ const App = () => (
                 <PrivateRoute exact path="/pet/:id">
                   <PetPage />
                 </PrivateRoute>
-              </IonRouterOutlet>
-              <IonTabBar slot="bottom">
-                <IonTabButton tab="test" href="/auth">
-                  <IonIcon aria-hidden="true" icon={triangle} />
-                  <IonLabel>Test</IonLabel>
-                </IonTabButton>
-              </IonTabBar>
-            </IonTabs>
-          </IonReactRouter>
-        </PetServicesProvider>
-      </ShelterServicesProvider>
-    </AuthServicesProvider>
+              </PetServicesProvider>
+            </ShelterServicesProvider>
+          </AuthServicesProvider>
+        </ToastProvider>
+      </IonRouterOutlet>
+    </IonReactRouter>
   </IonApp>
 );
 
