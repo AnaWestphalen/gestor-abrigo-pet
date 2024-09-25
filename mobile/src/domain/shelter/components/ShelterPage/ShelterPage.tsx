@@ -51,8 +51,10 @@ const ShelterPage: React.FC = () => {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonBackButton />
-            <IonTitle>Abrigo - Carregando...</IonTitle>
+            <IonButtons slot="start">
+              <IonBackButton defaultHref="/" />
+            </IonButtons>
+            <IonTitle>Carregando...</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>

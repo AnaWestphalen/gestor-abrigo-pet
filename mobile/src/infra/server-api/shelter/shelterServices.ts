@@ -32,18 +32,22 @@ const createShelter: ShelterServices["createShelter"] = async ({
   address,
   contact,
   coordinates,
+  description,
   // img,
 }) => {
   const response = await fetch(`${SHELTER_BASE_URL}`, {
     method: "POST",
     body: JSON.stringify({
-      name,
-      accepts,
-      address,
-      contact,
-      ...coordinates,
-      city,
-      state,
+      shelter: {
+        name,
+        accepts,
+        address,
+        contact,
+        ...coordinates,
+        city,
+        state,
+        description,
+      },
     }),
     headers: {
       "Content-Type": "application/json",
@@ -71,19 +75,19 @@ const editShelter: ShelterServices["editShelter"] = async (id, data) => {
   }
 };
 
-const closeShelter: ShelterServices["closeShelter"] = async (id) => {
-  const response = await fetch(`${SHELTER_BASE_URL}/${id}/close`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: authorization,
-    },
-  });
+// const closeShelter: ShelterServices["closeShelter"] = async (id) => {
+//   const response = await fetch(`${SHELTER_BASE_URL}/${id}/close`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: authorization,
+//     },
+//   });
 
-  if (!response.ok) {
-    throw new Error("Erro ao fechar abrigo");
-  }
-};
+//   if (!response.ok) {
+//     throw new Error("Erro ao fechar abrigo");
+//   }
+// };
 
 // const addLog: ShelterServices["addLog"] = async (id, { content }) => {
 //   const response = await fetch(`${SHELTER_BASE_URL}/${id}/log`, {
@@ -165,7 +169,7 @@ const shelterServices: ShelterServices = {
   getShelterDetails,
   createShelter,
   editShelter,
-  closeShelter,
+  // closeShelter,
   // addLog,
   // getShelterLogs,
   registerPet,

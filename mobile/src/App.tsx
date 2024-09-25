@@ -67,16 +67,16 @@ const App = () => (
                 <PrivateRoute exact path="/dashboard">
                   <DashboardPage />
                 </PrivateRoute>
-                <PrivateRoute exact path="/shelter/:id/pets">
+                <PrivateRoute exact path="/shelters/:id/pets">
                   <ShelterPetsPage />
                 </PrivateRoute>
-                <PrivateRoute exact path="/shelter/:id">
+                <PrivateRoute exact path="/shelters/:id">
                   <ShelterPage />
                 </PrivateRoute>
-                <PrivateRoute exact path="/shelter/create">
+                <PrivateRoute exact path="/shelters">
                   <RegisterShelter />
                 </PrivateRoute>
-                <PrivateRoute exact path="/pet/:id">
+                <PrivateRoute exact path="/pets/:id">
                   <PetPage />
                 </PrivateRoute>
               </PetServicesProvider>

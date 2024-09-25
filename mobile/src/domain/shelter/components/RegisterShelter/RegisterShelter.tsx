@@ -26,6 +26,7 @@ const RegisterShelter: FC = () => {
   const { createShelter } = useShelterServices();
   const [shelterName, setShelterName] = useState<string>("");
   const [state, setState] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [location, setLocation] = useState<{
     latitude: number;
@@ -66,7 +67,7 @@ const RegisterShelter: FC = () => {
       contact,
       coordinates: location,
       accepts: Array.from(selectedAnimals),
-      address: "",
+      address,
       description,
     });
   };
@@ -121,9 +122,9 @@ const RegisterShelter: FC = () => {
                 label="Nome do Abrigo"
                 labelPlacement="floating"
                 value={shelterName}
-                onIonChange={(e: {
-                  detail: { value: React.SetStateAction<string> };
-                }) => setShelterName(e.detail.value!)}
+                onIonChange={(e: { detail: { value: string } }) =>
+                  setShelterName(e.detail.value!)
+                }
                 required
               />
             </IonItem>
@@ -133,9 +134,9 @@ const RegisterShelter: FC = () => {
                 label="Estado"
                 labelPlacement="floating"
                 value={state}
-                onIonChange={(e: {
-                  detail: { value: React.SetStateAction<string> };
-                }) => setState(e.detail.value!)}
+                onIonChange={(e: { detail: { value: string } }) =>
+                  setState(e.detail.value!)
+                }
                 required
               />
             </IonItem>
@@ -145,9 +146,21 @@ const RegisterShelter: FC = () => {
                 label="Cidade"
                 labelPlacement="floating"
                 value={city}
-                onIonChange={(e: {
-                  detail: { value: React.SetStateAction<string> };
-                }) => setCity(e.detail.value!)}
+                onIonChange={(e: { detail: { value: string } }) =>
+                  setCity(e.detail.value!)
+                }
+                required
+              />
+            </IonItem>
+
+            <IonItem>
+              <IonInput
+                label="Rua e número"
+                labelPlacement="floating"
+                value={address}
+                onIonChange={(e: { detail: { value: string } }) =>
+                  setAddress(e.detail.value!)
+                }
                 required
               />
             </IonItem>
@@ -203,9 +216,9 @@ const RegisterShelter: FC = () => {
               labelPlacement="floating"
               value={contact}
               placeholder="Digite nome e telefone dos responsáveis pelo abrigo"
-              onIonChange={(e: {
-                detail: { value: React.SetStateAction<string> };
-              }) => setContact(e.detail.value!)}
+              onIonChange={(e: { detail: { value: string } }) =>
+                setContact(e.detail.value!)
+              }
             />
           </IonItem>
 
@@ -215,9 +228,9 @@ const RegisterShelter: FC = () => {
               labelPlacement="floating"
               value={description}
               placeholder="Fale um pouco sobre o abrigo"
-              onIonChange={(e: {
-                detail: { value: React.SetStateAction<string> };
-              }) => setDescription(e.detail.value!)}
+              onIonChange={(e: { detail: { value: string } }) =>
+                setDescription(e.detail.value!)
+              }
             />
           </IonItem>
 

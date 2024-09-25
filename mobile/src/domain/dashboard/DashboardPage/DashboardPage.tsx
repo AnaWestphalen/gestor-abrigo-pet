@@ -53,7 +53,7 @@ export const DashboardPage: FC = () => {
         {shelters.length > 0 ? (
           <IonList>
             {shelters.map((shelter) => (
-              <IonItem key={shelter.id} routerLink={`/shelter/${shelter.id}`}>
+              <IonItem key={shelter.id} routerLink={`/shelters/${shelter.id}`}>
                 <IonLabel>{shelter.name}</IonLabel>
               </IonItem>
             ))}
@@ -61,7 +61,7 @@ export const DashboardPage: FC = () => {
         ) : (
           <p>Não há abrigos cadastrados ainda.</p>
         )}
-        <IonButton routerLink="/shelter/create">Criar Abrigo</IonButton>
+        <IonButton routerLink="/shelters">Criar Abrigo</IonButton>
         <IonButton onClick={logout}>Logout</IonButton>
       </IonContent>
     </IonPage>
