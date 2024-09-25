@@ -58,6 +58,7 @@ gem 'pg_search'
 gem 'jquery-rails'
 gem 'webpacker'
 gem 'rack-cors'
+gem 'jwt'
 
 # gem devise
 gem 'devise'
