@@ -13,7 +13,9 @@ class Users::SessionsController < Devise::SessionsController
     self.resource = warden.authenticate!(auth_options)
     sign_in(resource_name, resource)
 
-    render json: { message: 'Login realizado com sucesso.', user: resource }, status: :ok
+    token = encode_jwt(resource)
+
+    render json: { message: 'Login realizado com sucesso.', user: resource, token: token }, status: :ok
   rescue
     render json: { error: 'Credenciais inválidas.' }, status: :unauthorized
   end
@@ -29,10 +31,10 @@ class Users::SessionsController < Devise::SessionsController
     end
   end
 
-  # protected
+  private
 
-  # If you have extra params to permit, append them to the sanitizer.
-  # def configure_sign_in_params
-  #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
-  # end
+  def encode_jwt(user)
+    payload = { user_id: user.id, exp: 24.hours.from_now.to_i }
+    JWT.encode(payload, Rails.application.secrets.secret_key_base)
+  end
 end

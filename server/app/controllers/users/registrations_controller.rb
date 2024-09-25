@@ -9,7 +9,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
     resource.phone = params[:user][:phone]
 
     if resource.save
-      render json: { message: 'Usuário criado com sucesso.', user: resource }, status: :created
+      token = encode_jwt(resource)
+      render json: { message: 'Usuário criado com sucesso.', user: resource, token: token }, status: :created
     else
       render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
     end
@@ -23,5 +24,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def account_update_params
     params.require(:user).permit(:email, :password, :password_confirmation, :current_password, :role, :phone)
+  end
+
+  def encode_jwt(user)
+    payload = { user_id: user.id, exp: 24.hours.from_now.to_i }
+    JWT.encode(payload, Rails.application.secrets.secret_key_base)
   end
 end
