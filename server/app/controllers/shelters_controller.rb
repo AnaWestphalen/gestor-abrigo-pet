@@ -1,6 +1,6 @@
 class SheltersController < ApplicationController
   before_action :set_shelter, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
+  # before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
   before_action :authenticate_user_from_jwt, only: [:create, :update, :destroy]
   after_action :verify_authorized, except: [:index, :search]
 
