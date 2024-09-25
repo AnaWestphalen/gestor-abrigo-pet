@@ -1,12 +1,15 @@
-import type { Pet } from "src/core/pet/types";
 import type { ShelterServices } from "src/core/shelter/types";
+import { authorization } from "src/infra/server-api/auth/authServices";
 import { BASE_URL } from "src/infra/server-api/config";
 
+const SHELTER_BASE_URL = `${BASE_URL}/shelters`;
+
 const getShelterDetails: ShelterServices["getShelterDetails"] = async (id) => {
-  const response = await fetch(`${BASE_URL}/shelters/${id}`, {
+  const response = await fetch(`${SHELTER_BASE_URL}/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      Authorization: authorization,
     },
   });
 
@@ -31,7 +34,7 @@ const createShelter: ShelterServices["createShelter"] = async ({
   coordinates,
   // img,
 }) => {
-  const response = await fetch(`${BASE_URL}/shelters`, {
+  const response = await fetch(`${SHELTER_BASE_URL}`, {
     method: "POST",
     body: JSON.stringify({
       name,
@@ -44,6 +47,7 @@ const createShelter: ShelterServices["createShelter"] = async ({
     }),
     headers: {
       "Content-Type": "application/json",
+      Authorization: authorization,
     },
   });
 
@@ -53,11 +57,12 @@ const createShelter: ShelterServices["createShelter"] = async ({
 };
 
 const editShelter: ShelterServices["editShelter"] = async (id, data) => {
-  const response = await fetch(`${BASE_URL}/shelters/${id}/update`, {
+  const response = await fetch(`${SHELTER_BASE_URL}/${id}/update`, {
     method: "PATCH",
     body: JSON.stringify({ ...data }),
     headers: {
       "Content-Type": "application/json",
+      Authorization: authorization,
     },
   });
 
@@ -67,10 +72,11 @@ const editShelter: ShelterServices["editShelter"] = async (id, data) => {
 };
 
 const closeShelter: ShelterServices["closeShelter"] = async (id) => {
-  const response = await fetch(`${BASE_URL}/shelters/${id}/close`, {
+  const response = await fetch(`${SHELTER_BASE_URL}/${id}/close`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: authorization,
     },
   });
 
@@ -79,50 +85,53 @@ const closeShelter: ShelterServices["closeShelter"] = async (id) => {
   }
 };
 
-const addLog: ShelterServices["addLog"] = async (id, { content }) => {
-  const response = await fetch(`${BASE_URL}/shelters/${id}/log`, {
-    method: "POST",
-    body: JSON.stringify({ content }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+// const addLog: ShelterServices["addLog"] = async (id, { content }) => {
+//   const response = await fetch(`${SHELTER_BASE_URL}/${id}/log`, {
+//     method: "POST",
+//     body: JSON.stringify({ content }),
+//     headers: {
+//       "Content-Type": "application/json",
+//       "Authorization": authorization,
+//     },
+//   });
 
-  if (!response.ok) {
-    throw new Error("Erro ao adicionar log");
-  }
-};
+//   if (!response.ok) {
+//     throw new Error("Erro ao adicionar log");
+//   }
+// };
 
-const getShelterLogs: ShelterServices["getShelterLogs"] = async (id) => {
-  const response = await fetch(`${BASE_URL}/shelters/${id}/logs`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+// const getShelterLogs: ShelterServices["getShelterLogs"] = async (id) => {
+//   const response = await fetch(`${SHELTER_BASE_URL}/${id}/logs`, {
+//     method: "GET",
+//     headers: {
+//       "Content-Type": "application/json",
+//       "Authorization": authorization,
+//     },
+//   });
 
-  if (!response.ok) {
-    throw new Error("Erro ao buscar logs do abrigo");
-  }
+//   if (!response.ok) {
+//     throw new Error("Erro ao buscar logs do abrigo");
+//   }
 
-  const body = await response.json();
+//   const body = await response.json();
 
-  console.log("Get shelter logs response body: ", body);
+//   console.log("Get shelter logs response body: ", body);
 
-  return body;
-};
+//   return body;
+// };
 
 const registerPet: ShelterServices["registerPet"] = async (
   shelterId,
   params
 ) => {
   const response = await fetch(
-    `${BASE_URL}/shelters/${shelterId}/pet/register`,
+    `${SHELTER_BASE_URL}/${shelterId}/pet/register`,
     {
       method: "POST",
       body: JSON.stringify({ ...params }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: authorization,
       },
     }
   );
@@ -133,45 +142,23 @@ const registerPet: ShelterServices["registerPet"] = async (
 };
 
 const getShelterPets: ShelterServices["getShelterPets"] = async (id) => {
-  // const response = await fetch(`${BASE_URL}/shelters/${id}/pets`, {
-  //   method: "GET",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-
-  // if (!response.ok) {
-  //   throw new Error("Erro ao buscar pets do abrigo");
-  // }
-
-  // const body = await response.json();
-
-  // console.log("Get shelter pets response body: ", body);
-
-  // return body;
-  // Mock response for development
-  const mockResponse = [
-    {
-      id: 1,
-      name: "Pet 1",
-      age: 2,
-      species: "cachorro",
-      color: "preto",
-      description: "Pet 1 description",
+  const response = await fetch(`${SHELTER_BASE_URL}/${id}/pets`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: authorization,
     },
-    {
-      id: 2,
-      name: "Pet 2",
-      age: 3,
-      species: "gato",
-      color: "branco",
-      description: "Pet 2 description",
-    },
-  ] satisfies Pet[];
+  });
 
-  console.log(`Get shelter pets mock response for id: ${id}`, mockResponse);
+  if (!response.ok) {
+    throw new Error("Erro ao buscar pets do abrigo");
+  }
 
-  return mockResponse;
+  const body = await response.json();
+
+  console.log("Get shelter pets response body: ", body);
+
+  return body;
 };
 
 const shelterServices: ShelterServices = {
@@ -179,8 +166,8 @@ const shelterServices: ShelterServices = {
   createShelter,
   editShelter,
   closeShelter,
-  addLog,
-  getShelterLogs,
+  // addLog,
+  // getShelterLogs,
   registerPet,
   getShelterPets,
 };

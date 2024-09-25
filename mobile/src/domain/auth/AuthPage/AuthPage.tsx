@@ -97,11 +97,13 @@ const AuthPage: FC<RouteComponentProps> = ({ history }) => {
                 const email = formData.get("email") as string;
                 const password = formData.get("password") as string;
                 const phone = formData.get("phone") as string;
+                const role = formData.get("role") as string;
                 const response = await register({
                   name,
                   email,
                   password,
                   phone,
+                  role,
                 });
                 if (response.success) {
                   console.log("Registro realizado com sucesso");
@@ -110,7 +112,12 @@ const AuthPage: FC<RouteComponentProps> = ({ history }) => {
               }}
             >
               <IonInput fill="solid" name="name" placeholder="Nome" />
-              <IonInput fill="solid" name="email" placeholder="Email" />
+              <IonInput
+                type="email"
+                fill="solid"
+                name="email"
+                placeholder="Email"
+              />
               <IonInput
                 fill="solid"
                 name="password"
@@ -118,7 +125,7 @@ const AuthPage: FC<RouteComponentProps> = ({ history }) => {
                 placeholder="Senha"
               />
               <IonInput fill="solid" name="phone" placeholder="Celular" />
-              <IonSelect value={"voluntario"} name="role">
+              <IonSelect label="Função" name="role">
                 <IonSelectOption value="voluntario">Voluntário</IonSelectOption>
                 <IonSelectOption value="gestor">
                   Gestor de Abrigo

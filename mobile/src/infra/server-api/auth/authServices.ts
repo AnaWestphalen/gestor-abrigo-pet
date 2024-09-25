@@ -9,7 +9,7 @@ const AUTH_ROUTES = {
 
 let loggedUser: User | undefined = undefined;
 
-let authorization = "";
+export let authorization = "";
 
 const login: AuthServices["login"] = async ({ email, password }) => {
   const adaptedParams = {
@@ -35,7 +35,7 @@ const login: AuthServices["login"] = async ({ email, password }) => {
 
   console.log("Login reponse body: ", body);
 
-  authorization = `Bearer ${body.auth_token}`;
+  authorization = `Bearer ${body.token}`;
   loggedUser = {
     id: body.id,
     email: body.email,
@@ -79,6 +79,10 @@ const register: AuthServices["register"] = async ({
   const body = await response.json();
 
   console.log("Register reponse body: ", body);
+
+  loggedUser = body.user ? body.user : undefined;
+
+  authorization = body.token ? `Bearer ${body.token}` : "";
 
   return body;
 };

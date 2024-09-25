@@ -42,15 +42,20 @@ export type AddLogParams = {
   content: string;
 };
 
-export type RegisterPetParams = Omit<Pet, "id" | "createdAt" | "createdBy">;
+export type RegisterPetParams = Omit<
+  Pet,
+  "id" | "createdAt" | "createdBy" | "species"
+> & {
+  specie: string;
+};
 
 export type ShelterServices = {
   getShelterDetails: (id: number) => Promise<Shelter>;
   createShelter: (params: CreateShelterParams) => Promise<void>;
   editShelter: (id: number, data: EditShelterParams) => Promise<void>;
   closeShelter: (id: number) => Promise<void>;
-  addLog: (shelterId: number, params: AddLogParams) => Promise<void>;
-  getShelterLogs: (id: number) => Promise<ShelterLog[]>;
+  // addLog: (shelterId: number, params: AddLogParams) => Promise<void>;
+  // getShelterLogs: (id: number) => Promise<ShelterLog[]>;
   registerPet: (shelterId: number, params: RegisterPetParams) => Promise<void>;
   getShelterPets: (id: number) => Promise<Pet[]>;
 };

@@ -2,12 +2,12 @@ import { type FC, type ReactNode, createContext } from "react";
 
 import type { Pet } from "src/core/pet/types";
 import type {
-  AddLogParams,
+  // AddLogParams,
   CreateShelterParams,
   EditShelterParams,
   RegisterPetParams,
   Shelter,
-  ShelterLog,
+  // ShelterLog,
 } from "src/core/shelter/types";
 import { useRepository } from "src/domain/shared/RepositoryProvider/useRepository";
 import type { ServiceResponse } from "src/domain/shared/types";
@@ -19,9 +19,9 @@ type ShelterServicesContextType = {
     id: number,
     data: EditShelterParams
   ) => Promise<ServiceResponse>;
-  closeShelter: (id: number) => Promise<ServiceResponse>;
-  addLog: (shelterId: number, params: AddLogParams) => Promise<ServiceResponse>;
-  getShelterLogs: (id: number) => Promise<ServiceResponse<ShelterLog[]>>;
+  // closeShelter: (id: number) => Promise<ServiceResponse>;
+  // addLog: (shelterId: number, params: AddLogParams) => Promise<ServiceResponse>;
+  // getShelterLogs: (id: number) => Promise<ServiceResponse<ShelterLog[]>>;
   registerPet: (
     shelterId: number,
     params: RegisterPetParams
@@ -65,32 +65,32 @@ export const ShelterServicesProvider: FC<{ children: ReactNode }> = ({
     }
   };
 
-  const closeShelter = async (id: number) => {
-    try {
-      await repository.shelter.closeShelter(id);
-      return { success: true };
-    } catch (error) {
-      return { error };
-    }
-  };
+  // const closeShelter = async (id: number) => {
+  //   try {
+  //     await repository.shelter.closeShelter(id);
+  //     return { success: true };
+  //   } catch (error) {
+  //     return { error };
+  //   }
+  // };
 
-  const addLog = async (shelterId: number, params: AddLogParams) => {
-    try {
-      await repository.shelter.addLog(shelterId, params);
-      return { success: true };
-    } catch (error) {
-      return { error };
-    }
-  };
+  // const addLog = async (shelterId: number, params: AddLogParams) => {
+  //   try {
+  //     await repository.shelter.addLog(shelterId, params);
+  //     return { success: true };
+  //   } catch (error) {
+  //     return { error };
+  //   }
+  // };
 
-  const getShelterLogs = async (id: number) => {
-    try {
-      const logs = await repository.shelter.getShelterLogs(id);
-      return { success: logs };
-    } catch (error) {
-      return { error };
-    }
-  };
+  // const getShelterLogs = async (id: number) => {
+  //   try {
+  //     const logs = await repository.shelter.getShelterLogs(id);
+  //     return { success: logs };
+  //   } catch (error) {
+  //     return { error };
+  //   }
+  // };
 
   const registerPet = async (shelterId: number, params: RegisterPetParams) => {
     try {
@@ -116,9 +116,9 @@ export const ShelterServicesProvider: FC<{ children: ReactNode }> = ({
         getShelterDetails,
         createShelter,
         editShelter,
-        closeShelter,
-        addLog,
-        getShelterLogs,
+        // closeShelter,
+        // addLog,
+        // getShelterLogs,
         registerPet,
         getShelterPets,
       }}
