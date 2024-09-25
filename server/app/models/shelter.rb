@@ -41,9 +41,8 @@ class Shelter < ApplicationRecord
   validates :city, presence: true, length: { maximum: 100 }
   validates :state, presence: true, length: { maximum: 50 }
   validates :description, presence: true, length: { maximum: 500 }
-  validates :contact, presence: true, uniqueness: true
+  validates :contact, presence: true, length: { maximum: 100 }
   validates :accepts, presence: true, length: { minimum: 1, message: 'must contain at least one accepted species' }
-  validates :contact, format: { with: /\A\+?[0-9\s\-]+\z/, message: 'must be a valid phone number' }
 
   def full_address
     [address, city, state].compact.join(', ')

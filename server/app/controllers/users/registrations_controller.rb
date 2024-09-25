@@ -5,9 +5,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     build_resource
 
-    resource.role = params[:user][:role]
-    resource.phone = params[:user][:phone]
-
     if resource.save
       token = encode_jwt(resource)
       render json: { message: 'Usuário criado com sucesso.', user: resource, token: token }, status: :created
