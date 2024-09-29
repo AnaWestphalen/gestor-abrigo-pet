@@ -35,7 +35,9 @@ class SheltersController < ApplicationController
 
   # POST /api/shelters
   def create
-    @shelter = current_user.shelters.new(shelter_params)
+    @shelter = Shelter.new(shelter_params)
+    @shelter.creator = current_user
+
     authorize @shelter
 
     if @shelter.save

@@ -21,7 +21,7 @@
 class Shelter < ApplicationRecord
   include PgSearch::Model
 
-  belongs_to :user, foreign_key: :created_by
+  belongs_to :creator, class_name: 'User', foreign_key: :created_by
   has_many :user_shelters
   has_many :users, through: :user_shelters
   has_many :pets
