@@ -3,7 +3,7 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   # POST /resource
   def create
-    build_resource
+    build_resource(sign_up_params)
 
     resource.role = params[:user][:role]
     resource.phone = params[:user][:phone]

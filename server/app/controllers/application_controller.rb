@@ -28,6 +28,6 @@ class ApplicationController < ActionController::API
   end
 
   def login_request?
-    request.path == '/api/users/sign_in' || request.path == '/api/users/sign_out'
+    request.path == '/api/users/sign_in' || request.path == '/api/users/sign_out' || (request.path == '/api/users' && request.post?)
   end
 end
