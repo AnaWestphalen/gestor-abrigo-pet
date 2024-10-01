@@ -23,12 +23,12 @@ class ShelterPolicy < ApplicationPolicy
 
   # Apenas um "gestor" do abrigo pode editar ou atualizar o abrigo
   def update?
-    user.role == 'gestor' && user.shelters.include?(shelter)
+    user.role == 'gestor' && shelter.creator == user
   end
 
   # Apenas um "gestor" pode destruir o abrigo
   def destroy?
-    user.role == 'gestor' && user.shelters.include?(shelter)
+    user.role == 'gestor' && shelter.creator == user
   end
 
   class Scope < Scope
