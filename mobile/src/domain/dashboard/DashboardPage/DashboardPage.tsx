@@ -8,9 +8,16 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonIcon
 } from "@ionic/react";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
+import "./DashboardPage.css";
 
 import type { User } from "src/core/auth/types";
 import type { Shelter } from "src/core/shelter/types";
@@ -49,18 +56,40 @@ export const DashboardPage: FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <h1>Início</h1>
+        <h1>Abrigos Registrados</h1>
+          
         {shelters.length > 0 ? (
           <IonList>
             {shelters.map((shelter) => (
-              <IonItem key={shelter.id} routerLink={`/shelter/${shelter.id}`}>
-                <IonLabel>{shelter.name}</IonLabel>
-              </IonItem>
+
+
+            <IonCard key={shelter.id}
+            routerLink={`/shelter/${shelter.id}`}>
+              <IonCardHeader>
+                <IonCardTitle className="shelter-list-title">{shelter.name}</IonCardTitle>
+              </IonCardHeader>
+            <IonCardContent>
+              <p>[placeholder para imagem] : {shelter.img}</p>
+              <p><strong>Endereço: </strong>{shelter.address}</p>
+              <p><strong>Criado por: </strong>{shelter.createdBy}</p>
+              <p><strong>Contato: </strong>{shelter.contact}</p>
+              <p><strong>Animais atendidos:</strong> {shelter.accepts.join(', ')}</p>
+
+              {/* Example action button */}
+              <IonButton fill="outline" color="primary" className="card" >
+                Ver Detalhes
+              </IonButton>
+            </IonCardContent>
+            </IonCard>
+
+     
             ))}
           </IonList>
         ) : (
           <p>Não há abrigos cadastrados ainda.</p>
         )}
+
+
         <IonButton routerLink="/shelter/create">Criar Abrigo</IonButton>
         <IonButton onClick={logout}>Logout</IonButton>
       </IonContent>
