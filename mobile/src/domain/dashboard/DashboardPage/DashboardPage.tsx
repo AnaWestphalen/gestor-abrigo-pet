@@ -52,8 +52,7 @@ export const DashboardPage: FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <h1>Abrigos Registrados</h1>
-          
+        <h1>Abrigos Registrados</h1>          
         {shelters.length > 0 ? (
           <IonList>
             {shelters.map((shelter) => (

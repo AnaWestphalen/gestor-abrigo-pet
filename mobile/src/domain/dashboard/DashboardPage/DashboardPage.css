@@ -25,7 +25,7 @@
   }
   
   .custom-card-header {
-    color: var(--ion-color-primary); /* Text color using primary */
+    color: var(--ion-color-primary);
   }
 
   .custom-card-content {
