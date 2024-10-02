@@ -2,8 +2,6 @@ import {
   IonButton,
   IonContent,
   IonHeader,
-  IonItem,
-  IonLabel,
   IonList,
   IonPage,
   IonTitle,
@@ -11,9 +9,7 @@ import {
   IonCard,
   IonCardContent,
   IonCardHeader,
-  IonCardSubtitle,
   IonCardTitle,
-  IonIcon
 } from "@ionic/react";
 import type { FC } from "react";
 import { useEffect, useState } from "react";
