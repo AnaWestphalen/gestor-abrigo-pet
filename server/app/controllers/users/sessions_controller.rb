@@ -31,6 +31,11 @@ class Users::SessionsController < Devise::SessionsController
     end
   end
 
+  # Sobrescreve o método para não armazenar localização na API
+  def store_location_for(resource_or_scope, location)
+    # Não faz nada na API
+  end
+
   private
 
   def encode_jwt(user)
