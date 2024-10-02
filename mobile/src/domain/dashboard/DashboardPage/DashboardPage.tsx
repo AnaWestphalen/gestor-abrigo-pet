@@ -60,11 +60,12 @@ export const DashboardPage: FC = () => {
 
 
             <IonCard key={shelter.id}
-            routerLink={`/shelter/${shelter.id}`}>
-              <IonCardHeader>
+            routerLink={`/shelter/${shelter.id}`}
+            className="custom-card">
+              <IonCardHeader className="custom-card-header">
                 <IonCardTitle className="shelter-list-title">{shelter.name}</IonCardTitle>
               </IonCardHeader>
-            <IonCardContent>
+            <IonCardContent className="custom-card-content">
               <p>[placeholder para imagem] : {shelter.img}</p>
               <p><strong>Endereço: </strong>{shelter.address}</p>
               <p><strong>Criado por: </strong>{shelter.createdBy}</p>
@@ -72,7 +73,7 @@ export const DashboardPage: FC = () => {
               <p><strong>Animais atendidos:</strong> {shelter.accepts.join(', ')}</p>
 
               {/* Example action button */}
-              <IonButton fill="outline" color="primary" className="card" >
+              <IonButton fill="outline" color="primary" className="details-button" >
                 Ver Detalhes
               </IonButton>
             </IonCardContent>
