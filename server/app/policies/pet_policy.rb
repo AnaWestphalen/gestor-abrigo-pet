@@ -7,7 +7,7 @@ class PetPolicy < ApplicationPolicy
   end
 
   def index?
-    user.shelters.include?(shelter)
+    user.shelters.include?(pet.shelter)
   end
 
   def show?

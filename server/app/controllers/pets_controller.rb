@@ -3,23 +3,28 @@ class PetsController < ApplicationController
   before_action :authorize_pet, only: [:edit, :update, :destroy]
   before_action :authenticate_user!, except: [:search]
   before_action :authorize_shelter_user, only: [:new, :create]
-  before_action :authorize_gestor_role, only: [:destroy]
 
   def authorize_pet
     authorize @pet
   end
 
-  # GET /api/shelters/:shelter_id/pets/:pet_id/logs
+  # GET /api/shelters/:shelter_id/pets
   def index
     @shelter = Shelter.find(params[:shelter_id])
-    @pet = Pet.find(params[:pet_id])
-    @logs = @pet.logs
-    render json: @pets
+    @pets = policy_scope(Pet).where(shelter: @shelter).includes(img_attachment: :blob)
+    render json: @pets.as_json(
+      only: [:id, :name, :specie, :color, :size, :age, :description, :found_in, :received_at, :left_at],
+      methods: [:img_url]
+    ), status: :ok
   end
 
-  # GET /api/shelters/:shelter_id/pets/:pet_id/logs/:id
+  # GET /api/shelters/:shelter_id/pets/:id
   def show
-    render json: @pet
+    authorize @pet
+    render json: @pet.as_json(
+      only: [:id, :name, :specie, :color, :size, :age, :description, :found_in, :received_at, :left_at],
+      methods: [:img_url]
+    ), status: :ok
   end
 
   # GET /shelters/:shelter_id/pets/:pet_id/logs/new
@@ -32,59 +37,78 @@ class PetsController < ApplicationController
   # POST /api/shelters/:shelter_id/pets
   def create
     @shelter = Shelter.find(params[:shelter_id])
-    @pet = Pet.find(params[:pet_id])
-    @log = Log.new(log_params)
-    @log.created_by = current_user
+    @pet = @shelter.pets.new(pet_params)
+    authorize @pet
 
-    if @log.save
-      PetLog.create(pet: @pet, log: @log)
-      render json: { message: 'Log criado com sucesso.', log: @log }, status: :created
+    if @pet.save
+      if params[:img].present?
+        @pet.img.attach(params[:img])
+      end
+
+      render json: {
+        message: 'O animal foi registrado com sucesso!',
+        pet: pet_with_img_url(@pet)
+      }, status: :created
     else
-      render json: { errors: @log.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @pet.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
-  # GET /api/shelters/:shelter_id/pets/:pet_id/logs/:id/edit
+  # GET /api/shelters/:shelter_id/pets/:pet_id/edit
   def edit
   end
 
-  # PATCH/PUT /api/shelters/:shelter_id/pets/:pet_id/logs/:id
+  # PATCH/PUT /api/shelters/:shelter_id/pets/:id
   def update
-    if @log.update(log_params)
-      render json: { message: 'Log atualizado com sucesso.', log: @log }, status: :ok
+    authorize @pet
+
+    if @pet.update(pet_params)
+      if params[:img].present?
+        @pet.img.purge if @pet.img.attached?
+        @pet.img.attach(params[:img])
+      end
+
+      render json: {
+        message: 'O registro do animal foi atualizado com sucesso!',
+        pet: pet_with_img_url(@pet)
+      }, status: :ok
     else
-      render json: { errors: @log.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @pet.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
-  # DELETE /api/shelters/:shelter_id/pets/:pet_id/logs/:id
+  # DELETE /api/shelters/:shelter_id/pets/:id
   def destroy
     authorize @pet
-    @shelter = @pet.shelter
     @pet.destroy
-    head :no_content
+    render json: { message: 'O registro do animal foi excluído com sucesso!' }, status: :no_content
   end
 
+  # GET /api/shelters/:shelter_id/pets/search
+  # GET /api/pets/search
   def search
     if params[:shelter_id].present?
       @shelter = Shelter.find(params[:shelter_id])
       @pets = @shelter.pets
 
-      if params[:name].present?
-        @pets = @pets.where('name ILIKE ?', "%#{params[:name]}%")
-      end
+      @pets = @pets.where('name ILIKE ?', "%#{params[:name]}%") if params[:name].present?
 
-      render json: @pets
+      render json: @pets.as_json(
+        only: [:id, :name, :specie, :color, :size, :age, :description, :found_in, :received_at, :left_at],
+        methods: [:img_url]
+      ), status: :ok
     else
       @pets = Pet.all
+      @pets = @pets.where('name ILIKE ?', "%#{params[:name]}%") if params[:name].present?
 
-      if params[:name].present?
-        @pets = @pets.where('name ILIKE ?', "%#{params[:name]}%")
+      @pets_with_shelters = @pets.map do |pet|
+        pet.as_json(
+          only: [:id, :name, :specie, :color, :size, :age, :description, :found_in, :received_at, :left_at],
+          methods: [:img_url]
+        ).merge(shelter: pet.shelter.as_json(only: [:id, :name, :location]))
       end
 
-      @shelters = Shelter.where(id: @pets.pluck(:shelter_id).uniq)
-
-      render json: @pets
+      render json: @pets_with_shelters, status: :ok
     end
   end
 
@@ -105,9 +129,9 @@ class PetsController < ApplicationController
     end
   end
 
-  def authorize_gestor_role
-    unless current_user.role == 'gestor'
-      render json: { error: 'Você não tem permissão para excluir este registro.' }, status: :forbidden
-    end
+  def pet_with_img_url(pet)
+    pet.as_json(only: [:id, :name, :specie, :color, :size, :age, :description, :found_in, :received_at, :left_at]).merge(
+      img_url: pet.img_url
+    )
   end
 end
