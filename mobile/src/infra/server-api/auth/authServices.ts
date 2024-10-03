@@ -9,7 +9,7 @@ const AUTH_ROUTES = {
 
 let loggedUser: User | undefined = undefined;
 
-export let authorization = "";
+let authorization = "";
 
 const login: AuthServices["login"] = async ({ email, password }) => {
   const adaptedParams = {
@@ -36,12 +36,7 @@ const login: AuthServices["login"] = async ({ email, password }) => {
   console.log("Login reponse body: ", body);
 
   authorization = `Bearer ${body.token}`;
-  loggedUser = {
-    id: body.id,
-    email: body.email,
-    name: body.name,
-    phone: body.phone,
-  };
+  loggedUser = body.user;
 
   return body;
 };
@@ -101,6 +96,7 @@ const logout: AuthServices["logout"] = async () => {
   }
 
   loggedUser = undefined;
+  authorization = "";
 };
 
 const whoami: AuthServices["whoami"] = async () => {
@@ -108,6 +104,9 @@ const whoami: AuthServices["whoami"] = async () => {
 };
 
 const authServices: AuthServices = {
+  get authorization() {
+    return authorization;
+  },
   login,
   register,
   logout,

@@ -1,15 +1,44 @@
-import type { ShelterServices } from "src/core/shelter/types";
-import { authorization } from "src/infra/server-api/auth/authServices";
+import type { Shelter, ShelterServices } from "src/core/shelter/types";
+import authServices from "src/infra/server-api/auth/authServices";
 import { BASE_URL } from "src/infra/server-api/config";
+import type { RemoteShelter } from "src/infra/server-api/shelter/types";
 
 const SHELTER_BASE_URL = `${BASE_URL}/shelters`;
+
+const adaptRemoteShelter = (remoteShelter: RemoteShelter): Shelter => {
+  const { latitude, longitude, ...shelter } = remoteShelter;
+  return {
+    ...shelter,
+    coordinates: { latitude, longitude },
+  };
+};
+
+const getShelters: ShelterServices["getShelters"] = async () => {
+  const response = await fetch(SHELTER_BASE_URL, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: authServices.authorization,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Erro ao buscar abrigos");
+  }
+
+  const body = (await response.json()) as RemoteShelter[];
+
+  console.log("Get shelters response body: ", body);
+
+  return body.map(adaptRemoteShelter);
+};
 
 const getShelterDetails: ShelterServices["getShelterDetails"] = async (id) => {
   const response = await fetch(`${SHELTER_BASE_URL}/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: authorization,
+      Authorization: authServices.authorization,
     },
   });
 
@@ -17,11 +46,11 @@ const getShelterDetails: ShelterServices["getShelterDetails"] = async (id) => {
     throw new Error("Erro ao buscar detalhes do abrigo");
   }
 
-  const body = await response.json();
+  const body = (await response.json()) as { shelter: RemoteShelter };
 
   console.log("Get shelter details response body: ", body);
 
-  return body;
+  return adaptRemoteShelter(body?.shelter);
 };
 
 const createShelter: ShelterServices["createShelter"] = async ({
@@ -51,7 +80,7 @@ const createShelter: ShelterServices["createShelter"] = async ({
     }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: authorization,
+      Authorization: authServices.authorization,
     },
   });
 
@@ -66,7 +95,7 @@ const editShelter: ShelterServices["editShelter"] = async (id, data) => {
     body: JSON.stringify({ ...data }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: authorization,
+      Authorization: authServices.authorization,
     },
   });
 
@@ -80,7 +109,7 @@ const editShelter: ShelterServices["editShelter"] = async (id, data) => {
 //     method: "POST",
 //     headers: {
 //       "Content-Type": "application/json",
-//       Authorization: authorization,
+//       Authorization: authServices.authorization,
 //     },
 //   });
 
@@ -95,7 +124,7 @@ const editShelter: ShelterServices["editShelter"] = async (id, data) => {
 //     body: JSON.stringify({ content }),
 //     headers: {
 //       "Content-Type": "application/json",
-//       "Authorization": authorization,
+//       "Authorization": authServices.authorization,
 //     },
 //   });
 
@@ -109,7 +138,7 @@ const editShelter: ShelterServices["editShelter"] = async (id, data) => {
 //     method: "GET",
 //     headers: {
 //       "Content-Type": "application/json",
-//       "Authorization": authorization,
+//       "Authorization": authServices.authorization,
 //     },
 //   });
 
@@ -135,7 +164,7 @@ const registerPet: ShelterServices["registerPet"] = async (
       body: JSON.stringify({ ...params }),
       headers: {
         "Content-Type": "application/json",
-        Authorization: authorization,
+        Authorization: authServices.authorization,
       },
     }
   );
@@ -150,7 +179,7 @@ const getShelterPets: ShelterServices["getShelterPets"] = async (id) => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: authorization,
+      Authorization: authServices.authorization,
     },
   });
 
@@ -166,6 +195,7 @@ const getShelterPets: ShelterServices["getShelterPets"] = async (id) => {
 };
 
 const shelterServices: ShelterServices = {
+  getShelters,
   getShelterDetails,
   createShelter,
   editShelter,

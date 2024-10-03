@@ -22,6 +22,7 @@ export type LoginParams = {
 };
 
 export type AuthServices = {
+  authorization: string;
   register: (params: RegisterParams) => Promise<void>;
   login: (params: LoginParams) => Promise<void>;
   logout: () => Promise<void>;

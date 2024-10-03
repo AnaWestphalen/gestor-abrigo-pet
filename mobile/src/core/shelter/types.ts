@@ -13,9 +13,9 @@ export type Shelter = {
   description?: string;
   id: number;
   img?: string;
-  logs?: ShelterLog[];
   name: string;
   state?: string;
+  updatedAt?: string;
 };
 
 export type ShelterLog = Log & {
@@ -50,6 +50,7 @@ export type RegisterPetParams = Omit<
 };
 
 export type ShelterServices = {
+  getShelters: () => Promise<Shelter[]>;
   getShelterDetails: (id: number) => Promise<Shelter>;
   createShelter: (params: CreateShelterParams) => Promise<void>;
   editShelter: (id: number, data: EditShelterParams) => Promise<void>;

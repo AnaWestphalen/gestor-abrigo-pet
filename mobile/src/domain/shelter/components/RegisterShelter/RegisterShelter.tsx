@@ -17,12 +17,12 @@ import {
 } from "@ionic/react";
 import { heart, homeOutline, planetOutline } from "ionicons/icons";
 import { type FC, useState } from "react";
+import type { RouteComponentProps } from "react-router";
 
-// import { useHistory } from "react-router-dom";
-import "./RegisterShelter.css";
 import { useShelterServices } from "src/domain/shelter/contexts/ShelterServices/useShelterServices";
+import "./RegisterShelter.css";
 
-const RegisterShelter: FC = () => {
+const RegisterShelter: FC<RouteComponentProps> = ({ history }) => {
   const { createShelter } = useShelterServices();
   const [shelterName, setShelterName] = useState<string>("");
   const [state, setState] = useState<string>("");
@@ -38,8 +38,6 @@ const RegisterShelter: FC = () => {
   const [contact, setContact] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [showToast, setShowToast] = useState<boolean>(false);
-
-  // const history = useHistory();
 
   const getCurrentLocation = async () => {
     try {
@@ -70,11 +68,10 @@ const RegisterShelter: FC = () => {
       address,
       description,
     });
-  };
 
-  // const goToAccount = () => {
-  //   history.push("/account");
-  // };
+    history.push("/dashboard");
+    history.go(0);
+  };
 
   const toggleAnimalSelection = (animal: string) => {
     setSelectedAnimals((prev) => {
@@ -96,11 +93,6 @@ const RegisterShelter: FC = () => {
             <IonBackButton defaultHref="/" />
           </IonButtons>
           <IonTitle>Meu Abrigo</IonTitle>
-          {/* <IonButtons slot="end">
-            <IonButton onClick={goToAccount}>
-              <IonIcon icon={personCircleOutline} />
-            </IonButton>
-          </IonButtons> */}
         </IonToolbar>
       </IonHeader>
 

@@ -107,6 +107,7 @@ const AuthPage: FC<RouteComponentProps> = ({ history }) => {
                 });
                 if (response.success) {
                   console.log("Registro realizado com sucesso");
+                  (event.target as HTMLFormElement).reset();
                   setMode("login");
                 }
               }}

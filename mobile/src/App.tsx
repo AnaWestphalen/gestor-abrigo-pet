@@ -64,21 +64,27 @@ const App = () => (
                   path="/auth"
                   render={(props) => <AuthPage {...props} />}
                 />
-                <PrivateRoute exact path="/dashboard">
-                  <DashboardPage />
-                </PrivateRoute>
-                <PrivateRoute exact path="/shelters/:id/pets">
-                  <ShelterPetsPage />
-                </PrivateRoute>
-                <PrivateRoute exact path="/shelters/:id">
-                  <ShelterPage />
-                </PrivateRoute>
-                <PrivateRoute exact path="/shelters">
-                  <RegisterShelter />
-                </PrivateRoute>
-                <PrivateRoute exact path="/pets/:id">
-                  <PetPage />
-                </PrivateRoute>
+                <PrivateRoute
+                  exact
+                  path="/dashboard"
+                  component={DashboardPage}
+                />
+                <PrivateRoute
+                  exact
+                  path="/shelters/:id/pets"
+                  component={ShelterPetsPage}
+                />
+                <PrivateRoute
+                  exact
+                  path="/shelters/:id"
+                  component={ShelterPage}
+                />
+                <PrivateRoute
+                  exact
+                  path="/shelters"
+                  component={RegisterShelter}
+                />
+                <PrivateRoute exact path="/pets/:id" component={PetPage} />
               </PetServicesProvider>
             </ShelterServicesProvider>
           </AuthServicesProvider>

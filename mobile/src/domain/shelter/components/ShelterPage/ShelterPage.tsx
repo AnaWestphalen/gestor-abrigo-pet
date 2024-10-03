@@ -44,7 +44,7 @@ const ShelterPage: React.FC = () => {
 
     console.log("Fetching shelter details for id: ", params);
     fetchShelterDetails();
-  }, [params.id, getShelterDetails]);
+  }, [params.id]);
 
   if (!shelter) {
     return (
@@ -76,7 +76,7 @@ const ShelterPage: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonCard>
-          <IonImg src={shelter.img} alt={shelter.name} />
+          {shelter.img && <IonImg src={shelter.img} alt={shelter.name} />}
           <IonCardHeader>
             <IonCardTitle>{shelter.name}</IonCardTitle>
             <IonCardSubtitle>{shelter.address}</IonCardSubtitle>
