@@ -5,11 +5,19 @@
   }
   
   ion-card {
-    margin: 10px;
+    margin: 12px;
   }
 
   .details-button {
-    margin:5px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: bold;
+  }
+  
+  .details-button:hover {
+    background-color: var(--ion-color-secondary-tint);
+    color: var(--ion-color-light);
+    border: 2px var(--ion-color-secondary);
   }
 
   h1 {
@@ -18,10 +26,10 @@
   }
 
   .custom-card {
-    border: 2px solid var(--ion-color-primary);
+    border: 3px solid var(--ion-color-primary);
     background-color: var(--ion-color-dark);
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
+    border-radius: 10px;
   }
   
   .custom-card-header {
@@ -30,5 +38,12 @@
 
   .custom-card-content {
     margin: 10px;
+  }
+
+  .last-buttons {
+    margin-left: 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
   }
   
