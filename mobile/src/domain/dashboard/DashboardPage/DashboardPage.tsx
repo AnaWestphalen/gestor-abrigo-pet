@@ -1,21 +1,25 @@
 import {
   IonButton,
+  IonButtons,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
   IonContent,
+  IonFooter,
   IonHeader,
-  IonList,
+  IonIcon,
   IonPage,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+import { add, logOutOutline } from "ionicons/icons";
 import type { FC } from "react";
 import { useEffect } from "react";
 import "./DashboardPage.css";
 
 import { useAuthServices } from "src/domain/auth/contexts/AuthServices/useAuthServices";
+import { ROUTES } from "src/domain/shared/Route/routes";
 import { useShelterServices } from "src/domain/shelter/contexts/ShelterServices/useShelterServices";
 
 export const DashboardPage: FC = () => {
@@ -33,62 +37,73 @@ export const DashboardPage: FC = () => {
           <IonTitle>Boas vindas!</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent>
+      <IonContent className="shelter-list">
         <h1>Abrigos Registrados</h1>
         {shelters.length > 0 ? (
-          <IonList>
-            {shelters.map((shelter) => (
-              <IonCard
-                key={shelter.id}
-                routerLink={`/shelter/${shelter.id}`}
-                className="custom-card"
-              >
-                <IonCardHeader className="custom-card-header">
-                  <IonCardTitle className="shelter-list-title">
-                    {shelter.name}
-                  </IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent className="custom-card-content">
-                  <p>{shelter.img}</p>
-                  <p>
-                    <strong>Endereço: </strong>
-                    {shelter.address}
-                  </p>
-                  <p>
-                    <strong>Criado por: </strong>
-                    {shelter.createdBy}
-                  </p>
-                  <p>
-                    <strong>Contato: </strong>
-                    {shelter.contact}
-                  </p>
-                  <p>
-                    <strong>Animais atendidos:</strong>{" "}
-                    {shelter.accepts?.join(", ") ?? "Não informado"}
-                  </p>
+          shelters.map((shelter) => (
+            <IonCard
+              key={shelter.id}
+              routerLink={ROUTES.SHELTER.replace(":id", `${shelter.id}`)}
+              className="custom-card"
+            >
+              <IonCardHeader className="custom-card-header">
+                <IonCardTitle className="shelter-list-title">
+                  {shelter.name}
+                </IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent className="custom-card-content">
+                <p>{shelter.img}</p>
+                <p>
+                  <strong>Endereço: </strong>
+                  {shelter.address}
+                </p>
+                <p>
+                  <strong>Criado por: </strong>
+                  {shelter.createdBy}
+                </p>
+                <p>
+                  <strong>Contato: </strong>
+                  {shelter.contact}
+                </p>
+                <p>
+                  <strong>Animais atendidos:</strong>{" "}
+                  {shelter.accepts?.join(", ") ?? "Não informado"}
+                </p>
 
-                  <IonButton
-                    fill="outline"
-                    color="primary"
-                    className="details-button"
-                  >
-                    Ver Detalhes
-                  </IonButton>
-                </IonCardContent>
-              </IonCard>
-            ))}
-          </IonList>
+                <IonButton
+                  fill="outline"
+                  color="primary"
+                  className="details-button"
+                >
+                  Ver Detalhes
+                </IonButton>
+              </IonCardContent>
+            </IonCard>
+          ))
         ) : (
           <p>Não há abrigos cadastrados ainda.</p>
         )}
-
-        <IonButton routerLink="/shelter/create" className="last-buttons">
-          Criar Abrigo
-        </IonButton>
-        <IonButton onClick={logout} className="last-buttons">
-          Logout
-        </IonButton>
       </IonContent>
+      <IonFooter>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonButton
+              expand="block"
+              routerLink={ROUTES.CREATE_SHELTER}
+              className="last-buttons"
+            >
+              <IonIcon slot="start" icon={add} />
+              Criar Abrigo
+            </IonButton>
+          </IonButtons>
+          <IonButtons slot="end">
+            <IonButton expand="block" onClick={logout} className="last-buttons">
+              <IonIcon slot="start" icon={logOutOutline} />
+              Logout
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonFooter>
     </IonPage>
   );
 };
