@@ -28,13 +28,17 @@ class Pet < ApplicationRecord
 
   has_one_attached :img
 
-  validates :name, presence: true, uniqueness: true, length: { maximum: 100 }
-  validates :specie, presence: true, uniqueness: true, length: { maximum: 50 }
-  validates :description, presence: true, uniqueness: true, length: { maximum: 500 }
-  validates :found_in, presence: true, uniqueness: true, length: { maximum: 100 }
+  validates :name, presence: true, length: { maximum: 100 }
+  validates :specie, presence: true, length: { maximum: 50 }
+  validates :description, presence: true, length: { maximum: 500 }
+  validates :found_in, presence: true, length: { maximum: 100 }
 
   # Validação para garantir que 'left_at' seja posterior a 'received_at'
   validate :left_at_after_received_at
+
+  def img_url
+    Rails.application.routes.url_helpers.rails_blob_url(self.img, only_path: true) if self.img.attached?
+  end
 
   private
 
