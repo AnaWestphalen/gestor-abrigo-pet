@@ -38,6 +38,7 @@ import { DashboardPage } from "src/domain/dashboard/DashboardPage/DashboardPage"
 import PetPage from "src/domain/pet/components/PetPage/PetPage";
 import { PetServicesProvider } from "src/domain/pet/contexts/PetServices/PetServicesProvider";
 import { PrivateRoute } from "src/domain/shared/Route/PrivateRoute";
+import { ROUTES } from "src/domain/shared/Route/routes";
 import { ToastProvider } from "src/domain/shared/ToastProvider/ToastProvider";
 import RegisterShelter from "src/domain/shelter/components/RegisterShelter/RegisterShelter";
 import ShelterPage from "src/domain/shelter/components/ShelterPage/ShelterPage";
@@ -61,30 +62,31 @@ const App = () => (
                 />
                 <Route
                   exact
-                  path="/auth"
+                  path={ROUTES.AUTH}
                   render={(props) => <AuthPage {...props} />}
                 />
                 <PrivateRoute
                   exact
-                  path="/dashboard"
+                  path={ROUTES.DASHBOARD}
                   component={DashboardPage}
                 />
                 <PrivateRoute
                   exact
-                  path="/shelters/:id/pets"
+                  path={ROUTES.SHELTER_PETS}
                   component={ShelterPetsPage}
                 />
                 <PrivateRoute
                   exact
-                  path="/shelters/:id"
+                  path={ROUTES.SHELTER}
                   component={ShelterPage}
                 />
                 <PrivateRoute
                   exact
-                  path="/shelters"
+                  path={ROUTES.SHELTERS}
                   component={RegisterShelter}
                 />
-                <PrivateRoute exact path="/pets/:id" component={PetPage} />
+                <PrivateRoute exact path={ROUTES.PET} component={PetPage} />
+                <Route path="*" render={() => <Redirect to="/dashboard" />} />
               </PetServicesProvider>
             </ShelterServicesProvider>
           </AuthServicesProvider>

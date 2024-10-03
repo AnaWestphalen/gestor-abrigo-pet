@@ -130,7 +130,7 @@ const ShelterPage: React.FC = () => {
               )}
             </IonList>
             <IonItem
-              routerLink={`/shelter/${shelter.id}/pets`}
+              routerLink={`/shelters/${shelter.id}/pets`}
               routerDirection="forward"
             >
               <IonLabel>
