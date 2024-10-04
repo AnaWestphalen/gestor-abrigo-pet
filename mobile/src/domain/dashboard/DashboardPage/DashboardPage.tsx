@@ -37,52 +37,54 @@ export const DashboardPage: FC = () => {
           <IonTitle>Boas vindas!</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="shelter-list">
-        <h1>Abrigos Registrados</h1>
-        {shelters.length > 0 ? (
-          shelters.map((shelter) => (
-            <IonCard
-              key={shelter.id}
-              routerLink={ROUTES.SHELTER.replace(":id", `${shelter.id}`)}
-              className="custom-card"
-            >
-              <IonCardHeader className="custom-card-header">
-                <IonCardTitle className="shelter-list-title">
-                  {shelter.name}
-                </IonCardTitle>
-              </IonCardHeader>
-              <IonCardContent className="custom-card-content">
-                <p>{shelter.img}</p>
-                <p>
-                  <strong>Endereço: </strong>
-                  {shelter.address}
-                </p>
-                <p>
-                  <strong>Criado por: </strong>
-                  {shelter.createdBy}
-                </p>
-                <p>
-                  <strong>Contato: </strong>
-                  {shelter.contact}
-                </p>
-                <p>
-                  <strong>Animais atendidos:</strong>{" "}
-                  {shelter.accepts?.join(", ") ?? "Não informado"}
-                </p>
+      <IonContent>
+        <div className="container shelter-list">
+          <h1>Abrigos Registrados</h1>
+          {shelters.length > 0 ? (
+            shelters.map((shelter) => (
+              <IonCard
+                key={shelter.id}
+                routerLink={ROUTES.SHELTER.replace(":id", `${shelter.id}`)}
+                className="custom-card"
+              >
+                <IonCardHeader className="custom-card-header">
+                  <IonCardTitle className="shelter-list-title">
+                    {shelter.name}
+                  </IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent className="custom-card-content">
+                  <p>{shelter.img}</p>
+                  <p>
+                    <strong>Endereço: </strong>
+                    {shelter.address}
+                  </p>
+                  <p>
+                    <strong>Criado por: </strong>
+                    {shelter.createdBy}
+                  </p>
+                  <p>
+                    <strong>Contato: </strong>
+                    {shelter.contact}
+                  </p>
+                  <p>
+                    <strong>Animais atendidos:</strong>{" "}
+                    {shelter.accepts?.join(", ") ?? "Não informado"}
+                  </p>
 
-                <IonButton
-                  fill="outline"
-                  color="primary"
-                  className="details-button"
-                >
-                  Ver Detalhes
-                </IonButton>
-              </IonCardContent>
-            </IonCard>
-          ))
-        ) : (
-          <p>Não há abrigos cadastrados ainda.</p>
-        )}
+                  <IonButton
+                    fill="outline"
+                    color="primary"
+                    className="details-button"
+                  >
+                    Ver Detalhes
+                  </IonButton>
+                </IonCardContent>
+              </IonCard>
+            ))
+          ) : (
+            <p>Não há abrigos cadastrados ainda.</p>
+          )}
+        </div>
       </IonContent>
       <IonFooter>
         <IonToolbar>

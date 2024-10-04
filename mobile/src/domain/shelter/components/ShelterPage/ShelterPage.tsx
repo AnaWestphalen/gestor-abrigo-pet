@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import type { Shelter } from "src/core/shelter/types";
+import { ROUTES } from "src/domain/shared/Route/routes";
 import { useShelterServices } from "src/domain/shelter/contexts/ShelterServices/useShelterServices";
 
 const ShelterPage: React.FC = () => {
@@ -75,71 +76,73 @@ const ShelterPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <IonCard>
-          {shelter.img && <IonImg src={shelter.img} alt={shelter.name} />}
-          <IonCardHeader>
-            <IonCardTitle>{shelter.name}</IonCardTitle>
-            <IonCardSubtitle>{shelter.address}</IonCardSubtitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonList>
-              <IonItem>
-                <IonLabel>
-                  <h2>Contato</h2>
-                  <p>{shelter.contact}</p>
-                </IonLabel>
-              </IonItem>
-              <IonItem>
-                <IonLabel>
-                  <h2>Coordenadas</h2>
-                  <p>
-                    {shelter.coordinates?.latitude},{" "}
-                    {shelter.coordinates?.longitude}
-                  </p>
-                </IonLabel>
-              </IonItem>
-              <IonItem>
-                <IonLabel>
-                  <h2>Aceita</h2>
-                  <p>{shelter.accepts?.join(", ")}</p>
-                </IonLabel>
-              </IonItem>
-              {shelter.createdAt && (
+        <div className="container">
+          <IonCard>
+            {shelter.img && <IonImg src={shelter.img} alt={shelter.name} />}
+            <IonCardHeader>
+              <IonCardTitle>{shelter.name}</IonCardTitle>
+              <IonCardSubtitle>{shelter.address}</IonCardSubtitle>
+            </IonCardHeader>
+            <IonCardContent>
+              <IonList>
                 <IonItem>
                   <IonLabel>
-                    <h2>Criado em</h2>
-                    <p>{shelter.createdAt}</p>
+                    <h2>Contato</h2>
+                    <p>{shelter.contact}</p>
                   </IonLabel>
                 </IonItem>
-              )}
-              {shelter.createdBy && (
                 <IonItem>
                   <IonLabel>
-                    <h2>Criado por</h2>
-                    <p>{shelter.createdBy}</p>
+                    <h2>Coordenadas</h2>
+                    <p>
+                      {shelter.coordinates?.latitude},{" "}
+                      {shelter.coordinates?.longitude}
+                    </p>
                   </IonLabel>
                 </IonItem>
-              )}
-              {shelter.closedAt && (
                 <IonItem>
                   <IonLabel>
-                    <h2>Encerrado em</h2>
-                    <p>{shelter.closedAt}</p>
+                    <h2>Aceita</h2>
+                    <p>{shelter.accepts?.join(", ")}</p>
                   </IonLabel>
                 </IonItem>
-              )}
-            </IonList>
-            <IonItem
-              routerLink={`/shelters/${shelter.id}/pets`}
-              routerDirection="forward"
-            >
-              <IonLabel>
-                <h2>Pets no Abrigo</h2>
-                <p>Ver todos os pets no abrigo</p>
-              </IonLabel>
-            </IonItem>
-          </IonCardContent>
-        </IonCard>
+                {shelter.createdAt && (
+                  <IonItem>
+                    <IonLabel>
+                      <h2>Criado em</h2>
+                      <p>{shelter.createdAt}</p>
+                    </IonLabel>
+                  </IonItem>
+                )}
+                {shelter.createdBy && (
+                  <IonItem>
+                    <IonLabel>
+                      <h2>Criado por</h2>
+                      <p>{shelter.createdBy}</p>
+                    </IonLabel>
+                  </IonItem>
+                )}
+                {shelter.closedAt && (
+                  <IonItem>
+                    <IonLabel>
+                      <h2>Encerrado em</h2>
+                      <p>{shelter.closedAt}</p>
+                    </IonLabel>
+                  </IonItem>
+                )}
+              </IonList>
+              <IonItem
+                routerLink={ROUTES.SHELTER_PETS.replace(":id", `${shelter.id}`)}
+                routerDirection="forward"
+              >
+                <IonLabel>
+                  <h2>Pets no Abrigo</h2>
+                  <p>Ver todos os pets no abrigo</p>
+                </IonLabel>
+              </IonItem>
+            </IonCardContent>
+          </IonCard>
+        </div>
       </IonContent>
     </IonPage>
   );
