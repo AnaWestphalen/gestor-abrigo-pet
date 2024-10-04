@@ -6,7 +6,8 @@ export const ROUTES = {
   CREATE_SHELTER: "/shelters",
   SHELTER: "/shelters/:id",
   SHELTER_PETS: "/shelters/:id/pets",
+  CREATE_PET: "/shelters/:shelterId/pets/create",
+  PET: "/shelters/:shelterId/pets/:id",
   PETS: "/pets",
-  PET: "/pets/:id",
   NOT_FOUND: "*",
 };
