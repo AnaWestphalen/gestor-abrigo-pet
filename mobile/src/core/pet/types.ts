@@ -9,8 +9,11 @@ export type Pet = {
   foundIn?: Coordinates | string;
   id: number;
   img?: string;
+  leftAt?: string;
   name: string;
+  receivedAt?: string;
   size?: string;
+  shelterId: number;
   species?: string;
   tutorContact?: string;
   tutorName?: string;

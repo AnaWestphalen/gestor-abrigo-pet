@@ -1,0 +1,8 @@
+.no-pets {
+  display: flex;
+  gap: 1em;
+  padding-right: 64px;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}

@@ -6,6 +6,7 @@ import type {
   PetLog,
   PetShelterHistory,
 } from "src/core/pet/types";
+import type { RegisterPetParams } from "src/core/shelter/types";
 import { useRepository } from "src/domain/shared/RepositoryProvider/useRepository";
 import type { ServiceResponse } from "src/domain/shared/types";
 
@@ -15,7 +16,10 @@ type PetServicesContextType = {
   editPet: (id: number, pet: Partial<Pet>) => Promise<ServiceResponse>;
   addPetLog: (id: number, params: AddPetLogParams) => Promise<ServiceResponse>;
   getPetLogs: (id: number) => Promise<ServiceResponse<PetLog[]>>;
-  addPet: (pet: Pet) => Promise<ServiceResponse>;
+  addPet: (
+    shelterId: number,
+    pet: RegisterPetParams
+  ) => Promise<ServiceResponse>;
 };
 
 export const PetServicesContext = createContext<PetServicesContextType>(
@@ -72,9 +76,9 @@ export const PetServicesProvider: FC<{ children: ReactNode }> = ({
     }
   };
 
-  const addPet = async (pet: Pet) => {
+  const addPet = async (shelterId: number, pet: RegisterPetParams) => {
     try {
-      await repository.pet.addPet(pet);
+      await repository.shelter.registerPet(shelterId, pet);
       return { success: true };
     } catch (error) {
       return { error };

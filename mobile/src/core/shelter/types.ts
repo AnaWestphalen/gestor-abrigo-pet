@@ -42,11 +42,20 @@ export type AddLogParams = {
   content: string;
 };
 
-export type RegisterPetParams = Omit<
-  Pet,
-  "id" | "createdAt" | "createdBy" | "species"
-> & {
-  specie: string;
+export type RegisterPetParams = {
+  age?: string;
+  color?: string;
+  description?: string;
+  foundIn?: string;
+  img?: string;
+  leftAt?: Date;
+  name: string;
+  receivedAt?: Date;
+  size?: string;
+  shelterId: number;
+  species: string;
+  tutorContact?: string;
+  tutorName?: string;
 };
 
 export type ShelterServices = {
