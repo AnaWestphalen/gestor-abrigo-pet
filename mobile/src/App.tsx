@@ -36,6 +36,7 @@ import AuthPage from "src/domain/auth/AuthPage/AuthPage";
 import { AuthServicesProvider } from "src/domain/auth/contexts/AuthServices/AuthServicesProvider";
 import { DashboardPage } from "src/domain/dashboard/DashboardPage/DashboardPage";
 import PetPage from "src/domain/pet/components/PetPage/PetPage";
+import RegisterPet from "src/domain/pet/components/RegisterPet/RegisterPet";
 import { PetServicesProvider } from "src/domain/pet/contexts/PetServices/PetServicesProvider";
 import { PrivateRoute } from "src/domain/shared/Route/PrivateRoute";
 import { ROUTES } from "src/domain/shared/Route/routes";
@@ -86,6 +87,11 @@ const App = () => (
                   component={RegisterShelter}
                 />
                 <PrivateRoute exact path={ROUTES.PET} component={PetPage} />
+                <PrivateRoute
+                  exact
+                  path={ROUTES.CREATE_PET}
+                  component={RegisterPet}
+                />
                 <Route path="*" render={() => <Redirect to="/dashboard" />} />
               </PetServicesProvider>
             </ShelterServicesProvider>
