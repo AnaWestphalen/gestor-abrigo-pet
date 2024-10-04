@@ -1,0 +1,41 @@
+.shelter-list {
+  --background: var(--ion-background-color-step-100);
+}
+
+.shelter-list-title {
+  text-align: center;
+  font-size: 1.6rem;
+}
+
+.details-button {
+  border-radius: 4px;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  font-weight: bold;
+}
+
+.details-button:hover {
+  background-color: var(--ion-color-secondary-tint);
+  color: var(--ion-color-light);
+  border: 2px var(--ion-color-secondary);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.custom-card {
+  border: 3px solid var(--ion-color-primary);
+  box-shadow: var(--ion-box-shadow);
+  border-radius: 10px;
+}
+
+.custom-card-header {
+  color: var(--ion-color-primary);
+}
+
+.custom-card-content {
+  margin: 10px;
+}

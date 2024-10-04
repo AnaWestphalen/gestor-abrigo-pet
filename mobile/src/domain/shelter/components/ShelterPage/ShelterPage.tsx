@@ -44,15 +44,17 @@ const ShelterPage: React.FC = () => {
 
     console.log("Fetching shelter details for id: ", params);
     fetchShelterDetails();
-  }, [params.id, getShelterDetails]);
+  }, [params.id]);
 
   if (!shelter) {
     return (
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonBackButton />
-            <IonTitle>Abrigo - Carregando...</IonTitle>
+            <IonButtons slot="start">
+              <IonBackButton defaultHref="/" />
+            </IonButtons>
+            <IonTitle>Carregando...</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -74,7 +76,7 @@ const ShelterPage: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonCard>
-          <IonImg src={shelter.img} alt={shelter.name} />
+          {shelter.img && <IonImg src={shelter.img} alt={shelter.name} />}
           <IonCardHeader>
             <IonCardTitle>{shelter.name}</IonCardTitle>
             <IonCardSubtitle>{shelter.address}</IonCardSubtitle>
@@ -128,7 +130,7 @@ const ShelterPage: React.FC = () => {
               )}
             </IonList>
             <IonItem
-              routerLink={`/shelter/${shelter.id}/pets`}
+              routerLink={`/shelters/${shelter.id}/pets`}
               routerDirection="forward"
             >
               <IonLabel>

@@ -1,12 +1,24 @@
 class ApplicationController < ActionController::API
   include Pundit::Authorization
-  before_action :authenticate_user_from_jwt, unless: :login_request?
+  before_action :authenticate_user_from_jwt, unless: :public_or_login_request?
   before_action :disable_session
   before_action :skip_devise_store_location
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   private
+
+  def public_request?
+    request.path == '/api/pets/search' || login_request?
+  end
+
+  def login_request?
+    request.path == '/api/users/sign_in' || request.path == '/api/users/sign_out' || (request.path == '/api/users' && request.post?)
+  end
+
+  def public_or_login_request?
+    public_request? || login_request?
+  end
 
   def user_not_authorized
     Rails.logger.info "Usuário não autorizado: #{current_user&.id} tentou acessar #{request.path}"
@@ -49,10 +61,6 @@ class ApplicationController < ActionController::API
 
   def current_user
     @current_user
-  end
-
-  def login_request?
-    request.path == '/api/users/sign_in' || request.path == '/api/users/sign_out' || (request.path == '/api/users' && request.post?)
   end
 
   def disable_session

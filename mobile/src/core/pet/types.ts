@@ -1,7 +1,7 @@
 import type { Coordinates, Log } from "src/core/shared/types";
 
 export type Pet = {
-  age?: number;
+  age?: string;
   color?: string;
   createdAt?: string;
   createdBy?: string;
