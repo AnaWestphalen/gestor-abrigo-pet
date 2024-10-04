@@ -8,7 +8,6 @@ import {
   IonIcon,
   IonInput,
   IonItem,
-  IonLabel,
   IonList,
   IonPage,
   IonTextarea,
@@ -16,17 +15,23 @@ import {
   IonToast,
   IonToolbar,
 } from "@ionic/react";
-import { heart, homeOutline, personCircleOutline } from "ionicons/icons";
+import { heart, homeOutline, planetOutline } from "ionicons/icons";
 import { type FC, useState } from "react";
-import { useHistory } from "react-router-dom";
+import type { RouteComponentProps } from "react-router";
+
+import { useShelterServices } from "src/domain/shelter/contexts/ShelterServices/useShelterServices";
 import "./RegisterShelter.css";
 
-const RegisterShelter: FC = () => {
+const RegisterShelter: FC<RouteComponentProps> = ({ history }) => {
+  const { createShelter } = useShelterServices();
   const [shelterName, setShelterName] = useState<string>("");
+  const [state, setState] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
   const [city, setCity] = useState<string>("");
-  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
-    null
-  );
+  const [location, setLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  }>();
   const [selectedAnimals, setSelectedAnimals] = useState<Set<string>>(
     new Set()
   );
@@ -34,14 +39,12 @@ const RegisterShelter: FC = () => {
   const [description, setDescription] = useState<string>("");
   const [showToast, setShowToast] = useState<boolean>(false);
 
-  const history = useHistory();
-
   const getCurrentLocation = async () => {
     try {
       const position = await Geolocation.getCurrentPosition();
       setLocation({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
       });
       console.log(
         `Localização: ${position.coords.latitude}, ${position.coords.longitude}`
@@ -51,35 +54,23 @@ const RegisterShelter: FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (shelterName && city && location && contact && description) {
-      // Here you would usually send this data to your backend or an API.
-      console.log({
-        shelterName,
-        city,
-        location,
-        animals: Array.from(selectedAnimals),
-        contact,
-        description,
-      });
+    console.log("Criando abrigo...");
+    await createShelter({
+      name: shelterName,
+      state,
+      city,
+      contact,
+      coordinates: location,
+      accepts: Array.from(selectedAnimals),
+      address,
+      description,
+    });
 
-      setShowToast(true);
-
-      setShelterName("");
-      setCity("");
-      setLocation(null);
-      setSelectedAnimals(new Set());
-      setContact("");
-      setDescription("");
-    } else {
-      alert("Por favor, preencha todos os campos do formulário.");
-    }
-  };
-
-  const goToAccount = () => {
-    history.push("/account");
+    history.push("/dashboard");
+    history.go(0);
   };
 
   const toggleAnimalSelection = (animal: string) => {
@@ -101,72 +92,96 @@ const RegisterShelter: FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref="/" />
           </IonButtons>
-          <IonTitle className="centered-title">Meu Abrigo</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={goToAccount}>
-              <IonIcon icon={personCircleOutline} />
-            </IonButton>
-          </IonButtons>
+          <IonTitle>Meu Abrigo</IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent>
-        <div className="header-with-icon">
-          <h1 className="cadastro-abrigo">Cadastrar Abrigo</h1>
-          <IonIcon icon={homeOutline} className="icon-right" />
+        <div className="header-with-icon ion-align-items-center">
+          <h1 className="ion-padding-horizontal">Cadastrar Abrigo</h1>
+          <IonIcon
+            icon={homeOutline}
+            size="large"
+            color="primary"
+            style={{ transform: "translateY(4px)" }}
+          />
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <IonList>
+        <form className="ion-margin-top" onSubmit={handleSubmit}>
+          <IonList className="form-list">
             <IonItem>
-              <IonLabel className="large-label" position="stacked">
-                Nome do Abrigo
-              </IonLabel>
               <IonInput
+                label="Nome do Abrigo"
+                labelPlacement="floating"
                 value={shelterName}
-                placeholder="Digite o nome do seu abrigo"
-                onIonChange={(e: {
-                  detail: { value: React.SetStateAction<string> };
-                }) => setShelterName(e.detail.value!)}
+                onIonChange={(e: { detail: { value: string } }) =>
+                  setShelterName(e.detail.value!)
+                }
                 required
               />
             </IonItem>
 
             <IonItem>
-              <IonLabel className="large-label" position="stacked">
-                Cidade
-              </IonLabel>
               <IonInput
+                label="Estado"
+                labelPlacement="floating"
+                value={state}
+                onIonChange={(e: { detail: { value: string } }) =>
+                  setState(e.detail.value!)
+                }
+                required
+              />
+            </IonItem>
+
+            <IonItem>
+              <IonInput
+                label="Cidade"
+                labelPlacement="floating"
                 value={city}
-                placeholder="Digite o nome da cidade"
-                onIonChange={(e: {
-                  detail: { value: React.SetStateAction<string> };
-                }) => setCity(e.detail.value!)}
+                onIonChange={(e: { detail: { value: string } }) =>
+                  setCity(e.detail.value!)
+                }
                 required
               />
             </IonItem>
 
             <IonItem>
-              <IonLabel className="large-label" position="stacked">
-                Localização
-              </IonLabel>
               <IonInput
-                value={location ? `${location.lat}, ${location.lng}` : ""}
-                placeholder="Clique no botão para usar sua localização atual"
-                disabled
+                label="Rua e número"
+                labelPlacement="floating"
+                value={address}
+                onIonChange={(e: { detail: { value: string } }) =>
+                  setAddress(e.detail.value!)
+                }
+                required
               />
+            </IonItem>
+
+            <IonItem>
+              <IonInput
+                label="Localização"
+                labelPlacement="stacked"
+                value={
+                  location ? `${location.latitude}, ${location.longitude}` : ""
+                }
+                readonly
+                placeholder="Clique no ícone ao lado"
+              />
+
               <IonButton
-                className="ion-margin-bottom"
+                className="ion-margin-top ion-icon-button"
                 expand="block"
+                fill="clear"
+                slot="end"
                 onClick={getCurrentLocation}
               >
-                Buscar localização atual
+                <IonIcon icon={planetOutline} size="large" />
               </IonButton>
             </IonItem>
           </IonList>
 
           <div className="animal-selection">
-            <h2>Animais Atendidos:</h2>
+            <h2>Animais atendidos:</h2>
             <IonButton
               fill={selectedAnimals.has("Cachorro") ? "solid" : "outline"}
               onClick={() => toggleAnimalSelection("Cachorro")}
@@ -188,30 +203,26 @@ const RegisterShelter: FC = () => {
           </div>
 
           <IonItem>
-            <IonLabel className="large-label" position="stacked">
-              Contatos
-            </IonLabel>
             <IonTextarea
+              label="Contato"
+              labelPlacement="floating"
               value={contact}
               placeholder="Digite nome e telefone dos responsáveis pelo abrigo"
-              onIonChange={(e: {
-                detail: { value: React.SetStateAction<string> };
-              }) => setContact(e.detail.value!)}
-              required
+              onIonChange={(e: { detail: { value: string } }) =>
+                setContact(e.detail.value!)
+              }
             />
           </IonItem>
 
           <IonItem>
-            <IonLabel className="large-label" position="stacked">
-              Descrição
-            </IonLabel>
             <IonTextarea
+              label="Descrição"
+              labelPlacement="floating"
               value={description}
               placeholder="Fale um pouco sobre o abrigo"
-              onIonChange={(e: {
-                detail: { value: React.SetStateAction<string> };
-              }) => setDescription(e.detail.value!)}
-              required
+              onIonChange={(e: { detail: { value: string } }) =>
+                setDescription(e.detail.value!)
+              }
             />
           </IonItem>
 

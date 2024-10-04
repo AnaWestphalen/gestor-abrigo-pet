@@ -13,6 +13,7 @@ export type RegisterParams = {
   name?: string;
   password: string;
   phone?: string;
+  role?: string;
 };
 
 export type LoginParams = {
@@ -21,6 +22,7 @@ export type LoginParams = {
 };
 
 export type AuthServices = {
+  authorization: string;
   register: (params: RegisterParams) => Promise<void>;
   login: (params: LoginParams) => Promise<void>;
   logout: () => Promise<void>;

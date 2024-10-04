@@ -1,17 +1,24 @@
-import type { FC, ReactElement } from "react";
-import { Redirect, Route, type RouteProps } from "react-router-dom";
+import type { FC } from "react";
+import {
+  Redirect,
+  Route,
+  type RouteComponentProps,
+  type RouteProps,
+} from "react-router-dom";
 
 import { useAuthServices } from "src/domain/auth/contexts/AuthServices/useAuthServices";
 
 export const PrivateRoute: FC<
-  Omit<RouteProps, "render"> & { children: ReactElement }
-> = ({ children, ...rest }) => {
+  Omit<RouteProps, "render"> & { component: FC<RouteComponentProps> }
+> = ({ component: Component, ...rest }) => {
   const { currentUser } = useAuthServices();
 
   return (
     <Route
       {...rest}
-      render={() => (currentUser ? children : <Redirect to="/auth" />)}
+      render={(props) =>
+        currentUser ? <Component {...props} /> : <Redirect to="/auth" />
+      }
     />
   );
 };
