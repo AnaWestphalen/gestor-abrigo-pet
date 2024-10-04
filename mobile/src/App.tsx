@@ -46,6 +46,7 @@ import AuthPage from "src/domain/auth/AuthPage/AuthPage";
 import { AuthServicesProvider } from "src/domain/auth/contexts/AuthServices/AuthServicesProvider";
 import { DashboardPage } from "src/domain/dashboard/DashboardPage/DashboardPage";
 import PetPage from "src/domain/pet/components/PetPage/PetPage";
+import RegisterPet from "src/domain/pet/components/RegisterPet/RegisterPet";
 import { PetServicesProvider } from "src/domain/pet/contexts/PetServices/PetServicesProvider";
 import { PrivateRoute } from "src/domain/shared/Route/PrivateRoute";
 import RegisterShelter from "src/domain/shelter/components/RegisterShelter/RegisterShelter";
@@ -87,6 +88,9 @@ const App = () => (
                 </PrivateRoute>
                 <PrivateRoute exact path="/pet/:id">
                   <PetPage />
+                </PrivateRoute>
+                <PrivateRoute exact path="/shelter/:id/pet/register-pet">
+                  <RegisterPet />
                 </PrivateRoute>
               </IonRouterOutlet>
               <IonTabBar slot="bottom">

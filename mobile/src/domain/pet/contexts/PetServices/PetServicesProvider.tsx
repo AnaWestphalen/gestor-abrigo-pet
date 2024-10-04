@@ -15,6 +15,7 @@ type PetServicesContextType = {
   editPet: (id: number, pet: Partial<Pet>) => Promise<ServiceResponse>;
   addPetLog: (id: number, params: AddPetLogParams) => Promise<ServiceResponse>;
   getPetLogs: (id: number) => Promise<ServiceResponse<PetLog[]>>;
+  addPet: (pet: Pet) => Promise<ServiceResponse>;
 };
 
 export const PetServicesContext = createContext<PetServicesContextType>(
@@ -71,6 +72,15 @@ export const PetServicesProvider: FC<{ children: ReactNode }> = ({
     }
   };
 
+  const addPet = async (pet: Pet) => {
+    try {
+      await repository.pet.addPet(pet);
+      return { success: true };
+    } catch (error) {
+      return { error };
+    }
+  };
+
   return (
     <PetServicesContext.Provider
       value={{
@@ -79,6 +89,7 @@ export const PetServicesProvider: FC<{ children: ReactNode }> = ({
         editPet,
         addPetLog,
         getPetLogs,
+        addPet,
       }}
     >
       {children}
