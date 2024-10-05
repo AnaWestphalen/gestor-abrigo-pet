@@ -26,8 +26,6 @@ class Pet < ApplicationRecord
   has_many :pet_logs
   has_many :logs, through: :pet_logs
 
-  has_one_attached :img
-
   validates :name, presence: true, length: { maximum: 100 }
   validates :specie, presence: true, length: { maximum: 50 }
   validates :description, presence: true, length: { maximum: 500 }
@@ -36,8 +34,11 @@ class Pet < ApplicationRecord
   # Validação para garantir que 'left_at' seja posterior a 'received_at'
   validate :left_at_after_received_at
 
+  # Validação para verificar o formato base64
+  validate :valid_base64_image, if: -> { img.present? }
+
   def img_url
-    Rails.application.routes.url_helpers.rails_blob_url(self.img, only_path: true) if self.img.attached?
+    self.img if self.img.present?
   end
 
   private
@@ -45,6 +46,12 @@ class Pet < ApplicationRecord
   def left_at_after_received_at
     if received_at.present? && left_at.present? && left_at < received_at
       errors.add(:left_at, 'deve ser depois da data de recebimento')
+    end
+  end
+
+  def valid_base64_image
+    unless img =~ /\Adata:image\/[a-z]+;base64,/
+      errors.add(:img, 'não está no formato base64 válido')
     end
   end
 end
