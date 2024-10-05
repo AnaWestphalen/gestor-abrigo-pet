@@ -15,11 +15,11 @@ class PetPolicy < ApplicationPolicy
   end
 
   def create?
-    user.shelters.include?(pet.shelter)
+    true
   end
 
   def update?
-    user.shelters.include?(pet.shelter)
+    true
   end
 
   def destroy?
