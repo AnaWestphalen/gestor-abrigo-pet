@@ -1,10 +1,14 @@
+import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
 import {
+  IonBackButton,
   IonButton,
+  IonButtons,
   IonCol,
   IonContent,
   IonGrid,
   IonHeader,
   IonIcon,
+  IonImg,
   IonInput,
   IonItem,
   IonLabel,
@@ -15,16 +19,20 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { cameraOutline, heartOutline, pawOutline } from "ionicons/icons";
-import { type FC, useState } from "react";
+import { type ChangeEvent, type FC, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { RegisterPetParams } from "src/core/shelter/types";
 import { usePetServices } from "src/domain/pet/contexts/PetServices/usePetServices";
 import "./RegisterPet.css";
+import { useStorage } from "src/domain/shared/StorageProvider/useStorage";
+import { useToast } from "src/domain/shared/ToastProvider/useToast";
 
 const RegisterPet: FC = () => {
   const { shelterId } = useParams<{ shelterId: string }>();
   const { addPet } = usePetServices();
+  const { showToast } = useToast();
+  const { storage } = useStorage();
   const [petData, setPetData] = useState<RegisterPetParams>({
     name: "",
     color: "",
@@ -36,29 +44,77 @@ const RegisterPet: FC = () => {
     img: "",
     receivedAt: new Date(),
     leftAt: undefined,
-    species: "",
+    species: "cachorro",
     tutorName: "",
     tutorContact: "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
+  const handleChange = (e: unknown) => {
+    const { name, value } = (e as ChangeEvent<HTMLInputElement>).target;
     setPetData((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handleAddPet = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
+      if (petData.img) savePicture(petData.img);
       const { success, error } = await addPet(Number(shelterId), petData);
+
       if (success) {
+        showToast({
+          type: "success",
+          message: "Animal adicionado com sucesso",
+        });
         console.log("Animal adicionado com sucesso");
       } else {
+        showToast({
+          type: "warning",
+          message: "Falha ao adicionar animal",
+        });
         console.error("Falha ao adicionar animal:", error);
       }
     } catch (error) {
+      showToast({
+        type: "danger",
+        message: "Erro ao adicionar animal",
+      });
       console.error("Erro ao adicionar animal:", error);
+    }
+  };
+
+  const selectPetSpecies = (animal: "cachorro" | "gato" | "outro") => {
+    setPetData((prevState) => ({ ...prevState, species: animal }));
+  };
+
+  const [photo, setPhoto] = useState<string | null>(null);
+
+  const savePicture = async (photo: string) => {
+    const fileName = `${shelterId}-${petData.name}.jpeg`;
+    await storage?.set(fileName, photo);
+  };
+
+  const takePicture = async () => {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Camera,
+      });
+      console.log("Imagem tirada:", image);
+      if (image.dataUrl) {
+        setPetData((prevState) => ({
+          ...prevState,
+          img: image.dataUrl,
+        }));
+        setPhoto(image.dataUrl);
+      }
+    } catch (error) {
+      showToast({
+        type: "danger",
+        message: "Erro ao tirar foto",
+      });
+      console.error("Erro ao tirar foto:", error);
     }
   };
 
@@ -66,22 +122,34 @@ const RegisterPet: FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton />
+          </IonButtons>
           <IonTitle>Adicionar Pet</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <div className="container">
           <form onSubmit={handleAddPet}>
-            <IonButton expand="block" fill="outline" className="image-button">
-              <IonIcon slot="icon-only" icon={cameraOutline} />
-            </IonButton>
+            {!petData.img ? (
+              <IonButton
+                onClick={() => takePicture()}
+                expand="block"
+                fill="outline"
+                className="image-button"
+              >
+                <IonIcon slot="icon-only" icon={cameraOutline} />
+              </IonButton>
+            ) : (
+              photo && <IonImg src={photo} />
+            )}
 
             <IonItem>
               <IonLabel position="stacked">Nome</IonLabel>
               <IonInput
                 name="name"
                 value={petData.name}
-                onIonChange={handleChange}
+                onIonInput={handleChange}
                 placeholder="Bobby"
                 required
               />
@@ -92,7 +160,7 @@ const RegisterPet: FC = () => {
               <IonInput
                 name="color"
                 value={petData.color}
-                onIonChange={handleChange}
+                onIonInput={handleChange}
                 placeholder="Preto"
                 required
               />
@@ -104,10 +172,46 @@ const RegisterPet: FC = () => {
                 name="age"
                 type="number"
                 value={petData.age}
-                onIonChange={handleChange}
+                onIonInput={handleChange}
                 placeholder="Digite a idade"
               />
             </IonItem>
+
+            <IonLabel className="ion-padding section-title">
+              Animais atendidos:
+            </IonLabel>
+
+            <IonGrid>
+              <IonRow>
+                <IonCol>
+                  <IonButton
+                    expand="block"
+                    fill={petData.species === "cachorro" ? "solid" : "outline"}
+                    onClick={() => selectPetSpecies("cachorro")}
+                  >
+                    Cachorro
+                  </IonButton>
+                </IonCol>
+                <IonCol>
+                  <IonButton
+                    expand="block"
+                    fill={petData.species === "gato" ? "solid" : "outline"}
+                    onClick={() => selectPetSpecies("gato")}
+                  >
+                    Gato
+                  </IonButton>
+                </IonCol>
+                <IonCol>
+                  <IonButton
+                    expand="block"
+                    fill={petData.species === "outro" ? "solid" : "outline"}
+                    onClick={() => selectPetSpecies("outro")}
+                  >
+                    Outro
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
 
             <div className="ion-padding">
               <IonLabel className="section-title">Tamanho</IonLabel>
@@ -166,7 +270,7 @@ const RegisterPet: FC = () => {
               <IonInput
                 name="foundIn"
                 value={petData.foundIn}
-                onIonChange={handleChange}
+                onIonInput={handleChange}
                 placeholder="Digite o local"
                 required
               />
@@ -177,7 +281,7 @@ const RegisterPet: FC = () => {
               <IonTextarea
                 name="description"
                 value={petData.description}
-                onIonChange={handleChange}
+                onIonInput={handleChange}
                 placeholder="Escreva aqui todos os detalhes do animal"
                 required
               />
@@ -192,7 +296,7 @@ const RegisterPet: FC = () => {
               <IonInput
                 name="tutorName"
                 value={petData.tutorName}
-                onIonChange={handleChange}
+                onIonInput={handleChange}
                 placeholder="Digite o nome do tutor"
               />
             </IonItem>
@@ -201,7 +305,7 @@ const RegisterPet: FC = () => {
               <IonInput
                 name="tutorContact"
                 value={petData.tutorContact}
-                onIonChange={handleChange}
+                onIonInput={handleChange}
                 placeholder="Digite o contato"
               />
             </IonItem>

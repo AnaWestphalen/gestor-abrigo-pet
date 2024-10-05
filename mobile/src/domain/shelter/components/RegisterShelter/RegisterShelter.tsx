@@ -12,13 +12,13 @@ import {
   IonPage,
   IonTextarea,
   IonTitle,
-  IonToast,
   IonToolbar,
 } from "@ionic/react";
 import { heart, homeOutline, planetOutline } from "ionicons/icons";
 import { type FC, useState } from "react";
 import type { RouteComponentProps } from "react-router";
 
+import { useToast } from "src/domain/shared/ToastProvider/useToast";
 import { useShelterServices } from "src/domain/shelter/contexts/ShelterServices/useShelterServices";
 import "./RegisterShelter.css";
 
@@ -29,22 +29,22 @@ const RegisterShelter: FC<RouteComponentProps> = ({ history }) => {
   const [address, setAddress] = useState<string>("");
   const [city, setCity] = useState<string>("");
   const [location, setLocation] = useState<{
-    latitude: number;
-    longitude: number;
+    latitude: string;
+    longitude: string;
   }>();
   const [selectedAnimals, setSelectedAnimals] = useState<Set<string>>(
     new Set()
   );
   const [contact, setContact] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [showToast, setShowToast] = useState<boolean>(false);
+  const { showToast } = useToast();
 
   const getCurrentLocation = async () => {
     try {
       const position = await Geolocation.getCurrentPosition();
       setLocation({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
+        latitude: position.coords.latitude.toString(),
+        longitude: position.coords.longitude.toString(),
       });
       console.log(
         `Localização: ${position.coords.latitude}, ${position.coords.longitude}`
@@ -58,7 +58,7 @@ const RegisterShelter: FC<RouteComponentProps> = ({ history }) => {
     e.preventDefault();
 
     console.log("Criando abrigo...");
-    await createShelter({
+    const { error, success } = await createShelter({
       name: shelterName,
       state,
       city,
@@ -69,8 +69,19 @@ const RegisterShelter: FC<RouteComponentProps> = ({ history }) => {
       description,
     });
 
-    history.push("/dashboard");
-    history.go(0);
+    if (success) {
+      showToast({
+        type: "success",
+        message: "Abrigo cadastrado com sucesso!",
+      });
+      history.push("/dashboard");
+    } else {
+      showToast({
+        type: "danger",
+        message: "Erro ao cadastrar abrigo",
+      });
+      console.error("Erro ao criar abrigo:", error);
+    }
   };
 
   const toggleAnimalSelection = (animal: string) => {
@@ -114,7 +125,7 @@ const RegisterShelter: FC<RouteComponentProps> = ({ history }) => {
                 label="Nome do Abrigo"
                 labelPlacement="floating"
                 value={shelterName}
-                onIonChange={(e: { detail: { value: string } }) =>
+                onIonInput={(e: { detail: { value?: string | null } }) =>
                   setShelterName(e.detail.value!)
                 }
                 required
@@ -126,7 +137,7 @@ const RegisterShelter: FC<RouteComponentProps> = ({ history }) => {
                 label="Estado"
                 labelPlacement="floating"
                 value={state}
-                onIonChange={(e: { detail: { value: string } }) =>
+                onIonInput={(e: { detail: { value?: string | null } }) =>
                   setState(e.detail.value!)
                 }
                 required
@@ -138,7 +149,7 @@ const RegisterShelter: FC<RouteComponentProps> = ({ history }) => {
                 label="Cidade"
                 labelPlacement="floating"
                 value={city}
-                onIonChange={(e: { detail: { value: string } }) =>
+                onIonInput={(e: { detail: { value?: string | null } }) =>
                   setCity(e.detail.value!)
                 }
                 required
@@ -150,7 +161,7 @@ const RegisterShelter: FC<RouteComponentProps> = ({ history }) => {
                 label="Rua e número"
                 labelPlacement="floating"
                 value={address}
-                onIonChange={(e: { detail: { value: string } }) =>
+                onIonInput={(e: { detail: { value?: string | null } }) =>
                   setAddress(e.detail.value!)
                 }
                 required
@@ -208,7 +219,7 @@ const RegisterShelter: FC<RouteComponentProps> = ({ history }) => {
               labelPlacement="floating"
               value={contact}
               placeholder="Digite nome e telefone dos responsáveis pelo abrigo"
-              onIonChange={(e: { detail: { value: string } }) =>
+              onIonInput={(e: { detail: { value?: string | null } }) =>
                 setContact(e.detail.value!)
               }
             />
@@ -220,7 +231,7 @@ const RegisterShelter: FC<RouteComponentProps> = ({ history }) => {
               labelPlacement="floating"
               value={description}
               placeholder="Fale um pouco sobre o abrigo"
-              onIonChange={(e: { detail: { value: string } }) =>
+              onIonInput={(e: { detail: { value?: string | null } }) =>
                 setDescription(e.detail.value!)
               }
             />
@@ -231,13 +242,6 @@ const RegisterShelter: FC<RouteComponentProps> = ({ history }) => {
             Começar
           </IonButton>
         </form>
-
-        <IonToast
-          isOpen={showToast}
-          onDidDismiss={() => setShowToast(false)}
-          message="Abrigo cadastrado com sucesso!"
-          duration={2000}
-        />
       </IonContent>
     </IonPage>
   );

@@ -10,7 +10,7 @@ class PetsController < ApplicationController
   # GET /api/shelters/:shelter_id/pets
   def index
     @shelter = Shelter.find(params[:shelter_id])
-    @pets = policy_scope(Pet).where(shelter: @shelter)
+    @pets = Pet.where(shelter: @shelter)
     render json: @pets.as_json(
       only: [:id, :name, :specie, :color, :size, :age, :description, :found_in, :received_at, :left_at],
       methods: [:img_url]
@@ -19,7 +19,7 @@ class PetsController < ApplicationController
 
   # GET /api/shelters/:shelter_id/pets/:id
   def show
-    authorize @pet
+    # authorize @pet
     render json: @pet.as_json(
       only: [:id, :name, :specie, :color, :size, :age, :description, :found_in, :received_at, :left_at],
       methods: [:img_url]

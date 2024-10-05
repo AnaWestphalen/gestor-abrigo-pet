@@ -22,6 +22,8 @@ import { add, pawOutline } from "ionicons/icons";
 import { type FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import dog from "/src/assets/icons/dog.svg";
+
 import "./ShelterPetsPage.css";
 
 import type { Pet } from "src/core/pet/types";
@@ -32,26 +34,29 @@ const ShelterPetsPage: FC = () => {
   const { id } = useParams<{ id: string }>();
   const { getShelterPets } = useShelterServices();
   const [pets, setPets] = useState<Pet[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchShelterPets = async () => {
+      setLoading(true);
       const { success, error } = await getShelterPets(Number(id));
       if (success) {
         setPets(success);
       } else {
         console.error("Failed to fetch shelter pets:", error);
       }
+      setLoading(false);
     };
 
-    fetchShelterPets();
-  }, [id, getShelterPets]);
+    if (!loading) fetchShelterPets();
+  }, []);
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref={`/shelter/${id}`} />
+            <IonBackButton defaultHref="/" />
           </IonButtons>
           <IonTitle>Pets no Abrigo</IonTitle>
         </IonToolbar>
@@ -63,12 +68,21 @@ const ShelterPetsPage: FC = () => {
               <IonRow>
                 {pets.map((pet) => (
                   <IonCol size="6" key={pet.id}>
-                    <IonCard routerLink={`/pet/${pet.id}`}>
+                    <IonCard
+                      routerLink={ROUTES.PET.replace(":shelterId", id).replace(
+                        ":id",
+                        `${pet.id}`
+                      )}
+                    >
                       <IonImg
-                        src={pet.img || "https://via.placeholder.com/100"}
+                        className="shelter-pet-avatar"
+                        src={pet.img || "https://via.placeholder.com/150"}
                       />
-                      <IonCardHeader>
-                        <IonCardTitle>{pet.name}</IonCardTitle>
+                      <IonCardHeader className="flex-row space-between">
+                        <IonCardTitle>
+                          {pet.name}, {pet.age}
+                        </IonCardTitle>
+                        <IonIcon src={dog} size="small" />
                       </IonCardHeader>
                       <IonCardContent>
                         <p>{pet.description}</p>

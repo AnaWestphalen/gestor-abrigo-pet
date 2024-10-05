@@ -1,149 +1,93 @@
 import type { PetServices } from "src/core/pet/types";
-// import { BASE_URL } from "src/infra/server-api/config";
+import authServices from "src/infra/server-api/auth/authServices";
+import { BASE_URL } from "src/infra/server-api/config";
+import {
+  adaptRemotePet,
+  adaptRemotePetLog,
+} from "src/infra/server-api/pet/adaptRemotePet";
+import type { RemotePet, RemotePetLog } from "src/infra/server-api/pet/types";
 
-const mockLogs = [
-  {
-    id: 1,
-    petId: 1,
-    content: "Exemplo de log",
-    createdAt: new Date().toISOString(),
-    createdBy: "Usuário exemplo",
-  },
-];
-
-const getPetDetails: PetServices["getPetDetails"] = async (id) => {
-  // const response = await fetch(`${BASE_URL}/pet/${id}`, {
-  //   method: "GET",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-
-  // if (!response.ok) {
-  //   throw new Error("Erro ao buscar detalhes do pet");
-  // }
-
-  // const body = await response.json();
-
-  // console.log("Get pet details response body: ", body);
-
-  // return body;
-
-  // Mock response for development
-  return {
-    id,
-    name: "Rex",
-    age: 3,
-    color: "Marrom",
-    description: "Um cachorro muito simpático",
-    foundIn: "Rua dos Bobos, 0",
-    size: "Grande",
-    species: "Cachorro",
-    tutorContact: "123456789",
-    tutorName: "John Doe",
-    createdAt: new Date().toISOString(),
-    createdBy: "Admin",
-  };
+const PET_API_ROUTES = {
+  GET_PET_DETAILS: `${BASE_URL}/shelters/:shelterId/pets/:id`,
+  ADD_PET_LOG: `${BASE_URL}/shelters/:shelterId/pets/:id/logs`,
+  GET_PET_LOGS: `${BASE_URL}/shelters/:shelterId/pets/:id/logs`,
 };
 
-const getPetHistory: PetServices["getPetHistory"] = async (id) => {
-  // const response = await fetch(`${BASE_URL}/pet/${id}/history`, {
-  //   method: "GET",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-
-  // if (!response.ok) {
-  //   throw new Error("Erro ao buscar histórico do pet");
-  // }
-
-  // const body = await response.json();
-
-  // console.log("Get pet history response body: ", body);
-
-  // return body;
-
-  // Mock response for development
-  return [
+const getPetDetails: PetServices["getPetDetails"] = async (shelterId, id) => {
+  const response = await fetch(
+    PET_API_ROUTES.GET_PET_DETAILS.replace(
+      ":shelterId",
+      `${shelterId}`
+    ).replace(":id", `${id}`),
     {
-      id: 1,
-      shelterId: 1,
-      petId: id,
-      receivedAt: new Date().toISOString(),
-      leftAt: undefined,
-      logs: [],
-    },
-  ];
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authServices.authorization}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Erro ao buscar detalhes do pet");
+  }
+
+  const body = (await response.json()) as RemotePet;
+
+  console.log("Get pet details response body: ", body);
+
+  return adaptRemotePet(body);
 };
 
-const editPet: PetServices["editPet"] = async (id, data) => {
-  // const response = await fetch(`${BASE_URL}/pet/${id}/update`, {
-  //   method: "PATCH",
-  //   body: JSON.stringify({ ...data }),
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
+const addPetLog: PetServices["addPetLog"] = async (shelterId, id, params) => {
+  const response = await fetch(
+    PET_API_ROUTES.ADD_PET_LOG.replace(":shelterId", `${shelterId}`).replace(
+      ":id",
+      `${id}`
+    ),
+    {
+      method: "POST",
+      body: JSON.stringify({ log: params }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authServices.authorization}`,
+      },
+    }
+  );
 
-  // if (!response.ok) {
-  //   throw new Error("Erro ao editar pet");
-  // }
-
-  // Mock response for development
-  console.log("Edit pet mock response: ", { id, ...data });
+  if (!response.ok) {
+    throw new Error("Erro ao adicionar log do pet");
+  }
 };
 
-const addPetLog: PetServices["addPetLog"] = async (id, params) => {
-  // const response = await fetch(`${BASE_URL}/pet/${id}/log`, {
-  //   method: "POST",
-  //   body: JSON.stringify({ ...params }),
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
+const getPetLogs: PetServices["getPetLogs"] = async (shelterId, id) => {
+  const response = await fetch(
+    PET_API_ROUTES.GET_PET_LOGS.replace(":shelterId", `${shelterId}`).replace(
+      ":id",
+      `${id}`
+    ),
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authServices.authorization}`,
+      },
+    }
+  );
 
-  // if (!response.ok) {
-  //   throw new Error("Erro ao adicionar log do pet");
-  // }
+  if (!response.ok) {
+    throw new Error("Erro ao buscar histórico do pet");
+  }
 
-  // Mock response for development
-  console.log("Add pet log mock response: ", { id, ...params });
-  mockLogs.unshift({
-    id: mockLogs.length + 1,
-    petId: id,
-    content: params.content,
-    createdAt: new Date().toISOString(),
-    createdBy: params.currentUser,
-  });
-};
+  const body = (await response.json()) as RemotePetLog[];
 
-const getPetLogs: PetServices["getPetLogs"] = async () => {
-  // const response = await fetch(`${BASE_URL}/pet/${id}/logs`, {
-  //   method: "GET",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
+  console.log("Get pet history response body: ", body);
 
-  // if (!response.ok) {
-  //   throw new Error("Erro ao buscar logs do pet");
-  // }
-
-  // const body = await response.json();
-
-  // console.log("Get pet logs response body: ", body);
-
-  // return body;
-
-  // Mock response for development
-  return mockLogs;
+  return body.map(adaptRemotePetLog);
 };
 
 const petServices: PetServices = {
   getPetDetails,
-  getPetHistory,
-  editPet,
   addPetLog,
   getPetLogs,
 };

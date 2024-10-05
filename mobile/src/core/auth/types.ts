@@ -1,3 +1,5 @@
+import type { Storage } from "@ionic/storage";
+
 export type User = {
   allowedIn?: number[];
   createdAt?: string;
@@ -23,8 +25,8 @@ export type LoginParams = {
 
 export type AuthServices = {
   authorization: string;
-  register: (params: RegisterParams) => Promise<void>;
-  login: (params: LoginParams) => Promise<void>;
-  logout: () => Promise<void>;
-  whoami: () => Promise<User | undefined>;
+  register: (params: RegisterParams, storage: Storage | null) => Promise<void>;
+  login: (params: LoginParams, storage: Storage | null) => Promise<void>;
+  logout: (storage: Storage | null) => Promise<void>;
+  whoami: (storage: Storage | null) => Promise<User | undefined>;
 };

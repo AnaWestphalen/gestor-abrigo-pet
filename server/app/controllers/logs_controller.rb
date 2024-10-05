@@ -3,14 +3,16 @@ class LogsController < ApplicationController
   before_action :set_pet
   before_action :set_log, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
-  before_action :authorize_shelter_user
-  before_action :authorize_log_creator, only: [:edit, :update, :destroy]
+  # before_action :authorize_shelter_user
+  # before_action :authorize_log_creator, only: [:edit, :update, :destroy]
 
   # GET /api/shelters/:shelter_id/pets/:pet_id/logs
   def index
     @shelter = Shelter.find(params[:shelter_id])
     @pet = Pet.find(params[:pet_id])
-    @logs = @pet.logs
+    @logs = @pet.logs.includes(:created_by).map do |log|
+      log.as_json.merge(created_by_email: log.created_by.email)
+    end
     render json: @logs
   end
 

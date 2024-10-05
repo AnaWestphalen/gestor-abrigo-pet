@@ -28,6 +28,7 @@ import "@ionic/react/css/palettes/dark.system.css";
 /* Theme variables */
 import "./theme/variables.css";
 import "./theme/utils.css";
+import "./theme/shared.css";
 
 import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
@@ -41,6 +42,7 @@ import RegisterPet from "src/domain/pet/components/RegisterPet/RegisterPet";
 import { PetServicesProvider } from "src/domain/pet/contexts/PetServices/PetServicesProvider";
 import { PrivateRoute } from "src/domain/shared/Route/PrivateRoute";
 import { ROUTES } from "src/domain/shared/Route/routes";
+import { StorageProvider } from "src/domain/shared/StorageProvider/StorageProvider";
 import { ToastProvider } from "src/domain/shared/ToastProvider/ToastProvider";
 import RegisterShelter from "src/domain/shelter/components/RegisterShelter/RegisterShelter";
 import ShelterPage from "src/domain/shelter/components/ShelterPage/ShelterPage";
@@ -54,49 +56,51 @@ const App = () => (
     <IonReactRouter>
       <IonRouterOutlet>
         <ToastProvider>
-          <AuthServicesProvider>
-            <ShelterServicesProvider>
-              <PetServicesProvider>
-                <Route
-                  exact
-                  path="/"
-                  render={() => <Redirect to="/dashboard" />}
-                />
-                <Route
-                  exact
-                  path={ROUTES.AUTH}
-                  render={(props) => <AuthPage {...props} />}
-                />
-                <PrivateRoute
-                  exact
-                  path={ROUTES.DASHBOARD}
-                  component={DashboardPage}
-                />
-                <PrivateRoute
-                  exact
-                  path={ROUTES.SHELTER_PETS}
-                  component={ShelterPetsPage}
-                />
-                <PrivateRoute
-                  exact
-                  path={ROUTES.SHELTER}
-                  component={ShelterPage}
-                />
-                <PrivateRoute
-                  exact
-                  path={ROUTES.SHELTERS}
-                  component={RegisterShelter}
-                />
-                <PrivateRoute exact path={ROUTES.PET} component={PetPage} />
-                <PrivateRoute
-                  exact
-                  path={ROUTES.CREATE_PET}
-                  component={RegisterPet}
-                />
-                <Route path="*" render={() => <Redirect to="/dashboard" />} />
-              </PetServicesProvider>
-            </ShelterServicesProvider>
-          </AuthServicesProvider>
+          <StorageProvider>
+            <AuthServicesProvider>
+              <ShelterServicesProvider>
+                <PetServicesProvider>
+                  <Route
+                    exact
+                    path="/"
+                    render={() => <Redirect to="/dashboard" />}
+                  />
+                  <Route
+                    exact
+                    path={ROUTES.AUTH}
+                    render={(props) => <AuthPage {...props} />}
+                  />
+                  <PrivateRoute
+                    exact
+                    path={ROUTES.DASHBOARD}
+                    component={DashboardPage}
+                  />
+                  <PrivateRoute
+                    exact
+                    path={ROUTES.SHELTER_PETS}
+                    component={ShelterPetsPage}
+                  />
+                  <PrivateRoute
+                    exact
+                    path={ROUTES.SHELTER}
+                    component={ShelterPage}
+                  />
+                  <PrivateRoute
+                    exact
+                    path={ROUTES.SHELTERS}
+                    component={RegisterShelter}
+                  />
+                  <PrivateRoute exact path={ROUTES.PET} component={PetPage} />
+                  <PrivateRoute
+                    exact
+                    path={ROUTES.CREATE_PET}
+                    component={RegisterPet}
+                  />
+                  <Route path="*" render={() => <Redirect to="/dashboard" />} />
+                </PetServicesProvider>
+              </ShelterServicesProvider>
+            </AuthServicesProvider>
+          </StorageProvider>
         </ToastProvider>
       </IonRouterOutlet>
     </IonReactRouter>

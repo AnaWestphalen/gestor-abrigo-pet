@@ -15,12 +15,18 @@ import { type FC, useEffect, useState } from "react";
 import { type RouteComponentProps } from "react-router-dom";
 
 import { useAuthServices } from "src/domain/auth/contexts/AuthServices/useAuthServices";
+import { useStorage } from "src/domain/shared/StorageProvider/useStorage";
 
 import "./AuthPage.css";
 
 const AuthPage: FC<RouteComponentProps> = ({ history }) => {
-  const { currentUser, login, register } = useAuthServices();
+  const { storage } = useStorage();
+  const { currentUser, login, register, whoami } = useAuthServices();
   const [mode, setMode] = useState<"login" | "register">("login");
+
+  useEffect(() => {
+    whoami();
+  }, [storage]);
 
   useEffect(() => {
     if (currentUser) {

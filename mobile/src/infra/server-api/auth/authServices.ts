@@ -11,7 +11,7 @@ let loggedUser: User | undefined = undefined;
 
 let authorization = "";
 
-const login: AuthServices["login"] = async ({ email, password }) => {
+const login: AuthServices["login"] = async ({ email, password }, storage) => {
   const adaptedParams = {
     user: {
       email,
@@ -36,18 +36,17 @@ const login: AuthServices["login"] = async ({ email, password }) => {
   console.log("Login reponse body: ", body);
 
   authorization = `Bearer ${body.token}`;
+  storage?.set("authorization", authorization);
   loggedUser = body.user;
+  storage?.set("user", loggedUser);
 
   return body;
 };
 
-const register: AuthServices["register"] = async ({
-  email,
-  password,
-  name,
-  phone,
-  role,
-}) => {
+const register: AuthServices["register"] = async (
+  { email, password, name, phone, role },
+  storage
+) => {
   const adaptedParams = {
     user: {
       email,
@@ -76,13 +75,14 @@ const register: AuthServices["register"] = async ({
   console.log("Register reponse body: ", body);
 
   loggedUser = body.user ? body.user : undefined;
-
+  storage?.set("user", loggedUser);
   authorization = body.token ? `Bearer ${body.token}` : "";
+  storage?.set("authorization", authorization);
 
   return body;
 };
 
-const logout: AuthServices["logout"] = async () => {
+const logout: AuthServices["logout"] = async (storage) => {
   const response = await fetch(AUTH_ROUTES.logout, {
     method: "DELETE",
     headers: {
@@ -97,9 +97,15 @@ const logout: AuthServices["logout"] = async () => {
 
   loggedUser = undefined;
   authorization = "";
+  storage?.remove("authorization");
+  storage?.remove("user");
 };
 
-const whoami: AuthServices["whoami"] = async () => {
+const whoami: AuthServices["whoami"] = async (storage) => {
+  if (storage) {
+    authorization = await storage.get("authorization");
+    loggedUser = await storage.get("user");
+  }
   return loggedUser;
 };
 

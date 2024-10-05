@@ -27,7 +27,12 @@ export const ToastProvider: FC<ToastProviderProps> = ({ children }) => {
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-      <IonToast {...toastProps} animated onDidDismiss={clearToast} />
+      <IonToast
+        position="top"
+        {...toastProps}
+        animated
+        onDidDismiss={clearToast}
+      />
     </ToastContext.Provider>
   );
 };

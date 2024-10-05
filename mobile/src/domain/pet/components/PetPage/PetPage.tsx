@@ -26,19 +26,22 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import type { Pet, PetLog } from "src/core/pet/types";
-import { useAuthServices } from "src/domain/auth/contexts/AuthServices/useAuthServices";
 import { usePetServices } from "src/domain/pet/contexts/PetServices/usePetServices";
 
+import "./PetPage.css";
+
 const PetPage: React.FC = () => {
-  const params = useParams<{ id: string }>();
-  const { currentUser } = useAuthServices();
+  const params = useParams<{ shelterId: string; id: string }>();
   const { getPetDetails, getPetLogs, addPetLog } = usePetServices();
   const [pet, setPet] = useState<Pet | null>(null);
   const [petLogs, setPetLogs] = useState<PetLog[] | null>(null);
 
   useEffect(() => {
     const fetchPetDetails = async () => {
-      const { success, error } = await getPetDetails(Number(params.id));
+      const { success, error } = await getPetDetails(
+        Number(params.shelterId),
+        Number(params.id)
+      );
       if (success) {
         setPet(success);
       } else {
@@ -48,11 +51,14 @@ const PetPage: React.FC = () => {
 
     console.log("Fetching shelter details for id: ", params);
     fetchPetDetails();
-  }, [params.id, getPetDetails]);
+  }, []);
 
   useEffect(() => {
     const fetchPetLogs = async () => {
-      const { success, error } = await getPetLogs(Number(params.id));
+      const { success, error } = await getPetLogs(
+        Number(params.shelterId),
+        Number(params.id)
+      );
       if (success) {
         setPetLogs([...success]);
       } else {
@@ -62,13 +68,16 @@ const PetPage: React.FC = () => {
 
     console.log("Buscando logs para o pet de id: ", params);
     fetchPetLogs();
-  }, [params.id, getPetLogs]);
+  }, []);
 
   if (!pet) {
     return (
       <IonPage>
         <IonHeader>
           <IonToolbar>
+            <IonButtons slot="start">
+              <IonBackButton defaultHref="/" />
+            </IonButtons>
             <IonTitle>Carregando...</IonTitle>
           </IonToolbar>
         </IonHeader>
@@ -86,13 +95,19 @@ const PetPage: React.FC = () => {
     const content = formData.get("content") as string;
     console.log("Criando atividade no feed do pet com o conteúdo: ", content);
     try {
-      const { success } = await addPetLog(Number(params.id), {
-        content,
-        currentUser: currentUser!.name || currentUser!.email,
-      });
+      const { success } = await addPetLog(
+        Number(params.shelterId),
+        Number(params.id),
+        {
+          content,
+        }
+      );
       console.log("Atividade adicionada com sucesso? ", !!success);
       if (success) {
-        const { success, error } = await getPetLogs(Number(params.id));
+        const { success, error } = await getPetLogs(
+          Number(params.shelterId),
+          Number(params.id)
+        );
         console.log("Buscando logs para o pet de id: ", params);
         if (success) {
           console.log("Logs do pet atualizados: ", success);
@@ -120,7 +135,10 @@ const PetPage: React.FC = () => {
       <IonContent>
         <div className="container">
           <IonCard>
-            <IonImg src={pet.img || "https://via.placeholder.com/150"} />
+            <IonImg
+              className="pet-avatar"
+              src={pet.img || "https://via.placeholder.com/150"}
+            />
             <IonCardHeader>
               <IonCardTitle>{pet.name}</IonCardTitle>
             </IonCardHeader>
@@ -147,11 +165,7 @@ const PetPage: React.FC = () => {
                 <IonItem>
                   <IonLabel>
                     <h2>Encontrado em</h2>
-                    <p>
-                      {typeof pet.foundIn === "string"
-                        ? pet.foundIn
-                        : `${pet.foundIn?.latitude}, ${pet.foundIn?.longitude}`}
-                    </p>
+                    <p>{pet.foundIn}</p>
                   </IonLabel>
                 </IonItem>
                 <IonItem>

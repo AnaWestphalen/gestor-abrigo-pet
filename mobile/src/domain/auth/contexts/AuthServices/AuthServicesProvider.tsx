@@ -8,6 +8,7 @@ import {
 
 import type { LoginParams, RegisterParams, User } from "src/core/auth/types";
 import { useRepository } from "src/domain/shared/RepositoryProvider/useRepository";
+import { useStorage } from "src/domain/shared/StorageProvider/useStorage";
 import { useToast } from "src/domain/shared/ToastProvider/useToast";
 
 type AuthServicesContextType = {
@@ -19,6 +20,7 @@ type AuthServicesContextType = {
     params: RegisterParams
   ) => Promise<{ success?: boolean; error?: unknown }>;
   logout: () => Promise<{ success?: boolean; error?: unknown }>;
+  whoami: () => Promise<{ success?: boolean; error?: unknown }>;
 };
 
 export const AuthServicesContext = createContext<AuthServicesContextType>(
@@ -29,12 +31,13 @@ export const AuthServicesProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const { repository } = useRepository();
+  const { storage } = useStorage();
   const { showToast } = useToast();
   const [currentUser, setCurrentUser] = useState<User | undefined>();
 
   const login = async (params: LoginParams) => {
     try {
-      await repository.auth.login(params);
+      await repository.auth.login(params, storage);
       await whoami();
       return { success: true };
     } catch (error) {
@@ -46,7 +49,7 @@ export const AuthServicesProvider: FC<{ children: ReactNode }> = ({
 
   const register = async (params: RegisterParams) => {
     try {
-      await repository.auth.register(params);
+      await repository.auth.register(params, storage);
       return { success: true };
     } catch (error) {
       console.error(`Erro ao fazer registro: ${error}`);
@@ -57,7 +60,7 @@ export const AuthServicesProvider: FC<{ children: ReactNode }> = ({
 
   const whoami = async () => {
     try {
-      const user = await repository.auth.whoami();
+      const user = await repository.auth.whoami(storage);
       setCurrentUser(user);
       return { user };
     } catch (error) {
@@ -69,7 +72,7 @@ export const AuthServicesProvider: FC<{ children: ReactNode }> = ({
 
   const logout = async () => {
     try {
-      await repository.auth.logout();
+      await repository.auth.logout(storage);
       await whoami();
       return { success: true };
     } catch (error) {
@@ -85,7 +88,7 @@ export const AuthServicesProvider: FC<{ children: ReactNode }> = ({
 
   return (
     <AuthServicesContext.Provider
-      value={{ currentUser, login, register, logout }}
+      value={{ currentUser, login, register, logout, whoami }}
     >
       {children}
     </AuthServicesContext.Provider>

@@ -1,17 +1,16 @@
-import type { Shelter, ShelterServices } from "src/core/shelter/types";
+import type { ShelterServices } from "src/core/shelter/types";
 import authServices from "src/infra/server-api/auth/authServices";
 import { BASE_URL } from "src/infra/server-api/config";
+import {
+  adaptPetToRemote,
+  adaptRemotePet,
+} from "src/infra/server-api/pet/adaptRemotePet";
+import type { RemotePet } from "src/infra/server-api/pet/types";
+import { adaptRemoteShelter } from "src/infra/server-api/shelter/adaptRemoteShelter";
 import type { RemoteShelter } from "src/infra/server-api/shelter/types";
 
 const SHELTER_BASE_URL = `${BASE_URL}/shelters`;
-
-const adaptRemoteShelter = (remoteShelter: RemoteShelter): Shelter => {
-  const { latitude, longitude, ...shelter } = remoteShelter;
-  return {
-    ...shelter,
-    coordinates: { latitude, longitude },
-  };
-};
+const CREATE_PET_URL = `${SHELTER_BASE_URL}/:shelterId/pets`;
 
 const getShelters: ShelterServices["getShelters"] = async () => {
   const response = await fetch(SHELTER_BASE_URL, {
@@ -104,64 +103,17 @@ const editShelter: ShelterServices["editShelter"] = async (id, data) => {
   }
 };
 
-// const closeShelter: ShelterServices["closeShelter"] = async (id) => {
-//   const response = await fetch(`${SHELTER_BASE_URL}/${id}/close`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: authServices.authorization,
-//     },
-//   });
-
-//   if (!response.ok) {
-//     throw new Error("Erro ao fechar abrigo");
-//   }
-// };
-
-// const addLog: ShelterServices["addLog"] = async (id, { content }) => {
-//   const response = await fetch(`${SHELTER_BASE_URL}/${id}/log`, {
-//     method: "POST",
-//     body: JSON.stringify({ content }),
-//     headers: {
-//       "Content-Type": "application/json",
-//       "Authorization": authServices.authorization,
-//     },
-//   });
-
-//   if (!response.ok) {
-//     throw new Error("Erro ao adicionar log");
-//   }
-// };
-
-// const getShelterLogs: ShelterServices["getShelterLogs"] = async (id) => {
-//   const response = await fetch(`${SHELTER_BASE_URL}/${id}/logs`, {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json",
-//       "Authorization": authServices.authorization,
-//     },
-//   });
-
-//   if (!response.ok) {
-//     throw new Error("Erro ao buscar logs do abrigo");
-//   }
-
-//   const body = await response.json();
-
-//   console.log("Get shelter logs response body: ", body);
-
-//   return body;
-// };
-
 const registerPet: ShelterServices["registerPet"] = async (
   shelterId,
   params
 ) => {
+  const adaptedRemotePet = adaptPetToRemote(params);
+
   const response = await fetch(
-    `${SHELTER_BASE_URL}/${shelterId}/pet/register`,
+    `${CREATE_PET_URL.replace(":shelterId", shelterId.toString())}`,
     {
       method: "POST",
-      body: JSON.stringify({ ...params }),
+      body: JSON.stringify({ pet: adaptedRemotePet }),
       headers: {
         "Content-Type": "application/json",
         Authorization: authServices.authorization,
@@ -187,11 +139,11 @@ const getShelterPets: ShelterServices["getShelterPets"] = async (id) => {
     throw new Error("Erro ao buscar pets do abrigo");
   }
 
-  const body = await response.json();
+  const body = (await response.json()) as RemotePet[];
 
   console.log("Get shelter pets response body: ", body);
 
-  return body;
+  return body.map(adaptRemotePet);
 };
 
 const shelterServices: ShelterServices = {
