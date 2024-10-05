@@ -10,6 +10,7 @@ import {
   IonHeader,
   IonIcon,
   IonPage,
+  IonText,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -44,45 +45,42 @@ export const DashboardPage: FC = () => {
             shelters.map((shelter) => (
               <IonCard
                 key={shelter.id}
-                routerLink={ROUTES.SHELTER.replace(":id", `${shelter.id}`)}
                 className="custom-card"
+                routerLink={ROUTES.SHELTER.replace(":id", `${shelter.id}`)}
               >
                 <IonCardHeader className="custom-card-header">
                   <IonCardTitle className="shelter-list-title">
                     {shelter.name}
                   </IonCardTitle>
                 </IonCardHeader>
-                <IonCardContent className="custom-card-content">
-                  <p>{shelter.img}</p>
-                  <p>
+                <IonCardContent>
+                  <IonText className="block">
                     <strong>Endereço: </strong>
-                    {shelter.address}
-                  </p>
-                  <p>
+                    {shelter.address} - {shelter.city}, {shelter.state}
+                  </IonText>
+                  <IonText className="block">
                     <strong>Criado por: </strong>
                     {shelter.createdBy}
-                  </p>
-                  <p>
+                  </IonText>
+                  <IonText className="block">
                     <strong>Contato: </strong>
                     {shelter.contact}
-                  </p>
-                  <p>
+                  </IonText>
+                  <IonText className="block">
                     <strong>Animais atendidos:</strong>{" "}
                     {shelter.accepts?.join(", ") ?? "Não informado"}
-                  </p>
-
-                  <IonButton
-                    fill="outline"
-                    color="primary"
-                    className="details-button"
-                  >
-                    Ver Detalhes
-                  </IonButton>
+                  </IonText>
                 </IonCardContent>
+                <IonButton
+                  fill="clear"
+                  routerLink={ROUTES.SHELTER.replace(":id", `${shelter.id}`)}
+                >
+                  Ver Detalhes
+                </IonButton>
               </IonCard>
             ))
           ) : (
-            <p>Não há abrigos cadastrados ainda.</p>
+            <IonText>Não há abrigos cadastrados ainda.</IonText>
           )}
         </div>
       </IonContent>

@@ -6,15 +6,18 @@ class SheltersController < ApplicationController
 
   # GET /api/shelters
   def index
-    @shelters = Shelter.all
-    render json: @shelters
+    @shelters = Shelter.all.includes(:creator)
+    shelters_with_email = @shelters.map do |shelter|
+      shelter.as_json.merge(created_by_email: shelter.creator.email)
+    end
+    render json: shelters_with_email
   end
 
   # GET /api/shelters/:id
   def show
     authorize @shelter
 
-    response = { shelter: @shelter }
+    response = { shelter: @shelter.as_json.merge(created_by_email: @shelter.creator.email) }
 
     if @shelter.geocoded?
       @markers = [

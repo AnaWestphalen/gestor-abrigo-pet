@@ -7,6 +7,7 @@ export type RemoteShelter = {
   longitude?: string;
   created_at?: string;
   created_by?: string;
+  created_by_email?: string;
   // closed_at?: string;
   description?: string;
   id: number;

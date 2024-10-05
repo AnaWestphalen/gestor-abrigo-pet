@@ -24,9 +24,10 @@ import { useParams } from "react-router-dom";
 
 import { RegisterPetParams } from "src/core/shelter/types";
 import { usePetServices } from "src/domain/pet/contexts/PetServices/usePetServices";
-import "./RegisterPet.css";
 import { useStorage } from "src/domain/shared/StorageProvider/useStorage";
 import { useToast } from "src/domain/shared/ToastProvider/useToast";
+
+import "./RegisterPet.css";
 
 const RegisterPet: FC = () => {
   const { shelterId } = useParams<{ shelterId: string }>();

@@ -1,5 +1,6 @@
 import {
   IonBackButton,
+  IonButton,
   IonButtons,
   IonCard,
   IonCardContent,
@@ -8,7 +9,7 @@ import {
   IonCardTitle,
   IonContent,
   IonHeader,
-  IonImg,
+  IonIcon,
   IonItem,
   IonLabel,
   IonList,
@@ -22,6 +23,8 @@ import { useParams } from "react-router-dom";
 import type { Shelter } from "src/core/shelter/types";
 import { ROUTES } from "src/domain/shared/Route/routes";
 import { useShelterServices } from "src/domain/shelter/contexts/ShelterServices/useShelterServices";
+
+import petSvg from "/src/assets/icons/pet.svg";
 
 const ShelterPage: React.FC = () => {
   const params = useParams<{ id: string }>();
@@ -78,10 +81,11 @@ const ShelterPage: React.FC = () => {
       <IonContent>
         <div className="container">
           <IonCard>
-            {shelter.img && <IonImg src={shelter.img} alt={shelter.name} />}
             <IonCardHeader>
-              <IonCardTitle>{shelter.name}</IonCardTitle>
-              <IonCardSubtitle>{shelter.address}</IonCardSubtitle>
+              <IonCardTitle>Abrigo: {shelter.name}</IonCardTitle>
+              <IonCardSubtitle className="flex-row align-center gap-05">
+                {shelter.address} - {shelter.city}, {shelter.state}
+              </IonCardSubtitle>
             </IonCardHeader>
             <IonCardContent>
               <IonList>
@@ -110,7 +114,9 @@ const ShelterPage: React.FC = () => {
                   <IonItem>
                     <IonLabel>
                       <h2>Criado em</h2>
-                      <p>{shelter.createdAt}</p>
+                      <p>
+                        {new Date(shelter.createdAt).toLocaleString("pt-br")}
+                      </p>
                     </IonLabel>
                   </IonItem>
                 )}
@@ -135,10 +141,12 @@ const ShelterPage: React.FC = () => {
                 routerLink={ROUTES.SHELTER_PETS.replace(":id", `${shelter.id}`)}
                 routerDirection="forward"
               >
-                <IonLabel>
-                  <h2>Pets no Abrigo</h2>
-                  <p>Ver todos os pets no abrigo</p>
-                </IonLabel>
+                <IonButtons>
+                  <IonIcon slot="start" src={petSvg} color="primary" />
+                  <IonButton fill="clear" color="primary">
+                    Ver pets
+                  </IonButton>
+                </IonButtons>
               </IonItem>
             </IonCardContent>
           </IonCard>

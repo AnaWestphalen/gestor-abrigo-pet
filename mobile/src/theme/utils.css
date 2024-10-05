@@ -3,6 +3,10 @@
   max-width: 520px;
 }
 
+.block {
+  display: block;
+}
+
 .flex-row {
   display: flex;
   flex-direction: row;
@@ -18,4 +22,16 @@
 
 .space-between {
   justify-content: space-between;
+}
+
+.gap-05 {
+  gap: 0.5em;
+}
+
+.gap-1 {
+  gap: 1em;
+}
+
+.gap-2 {
+  gap: 2em;
 }
